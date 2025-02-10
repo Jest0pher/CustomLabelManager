@@ -1,5 +1,7 @@
 from GlobalImport import *
 from Custom import CustomLabel
+from zebrafy import ZebrafyZPL
+from PIL import Image
 
 class ZebraPrinter:
     z : Zebra
@@ -17,5 +19,5 @@ class ZebraPrinter:
 
     def Print(self):
         data = self.label.GetPrintData()
-        #print(data)
+        print(data)
         self.z.output(data)
