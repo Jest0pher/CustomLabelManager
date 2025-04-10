@@ -1,1 +1,1 @@
-python -m PyInstaller --onefile Labels.py
+python -m PyInstaller --onefile Jesse_Custom_Labels.py
