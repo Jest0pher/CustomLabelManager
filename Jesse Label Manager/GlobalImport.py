@@ -3,8 +3,6 @@ from tkinter import ttk
 from zebra import Zebra
 import zpl
 import os
-from observer import Observable as Ob
-from observer import Event as obEvent
 import json
 
 directory :str = os.path.expanduser('~\Documents\CustomLabels')

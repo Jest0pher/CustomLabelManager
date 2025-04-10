@@ -12,6 +12,8 @@ class TextLabel(CustomLabel):
     entries = []
     checkBoxes = []
     removeButtons = []
+    upArrowButtons = []
+    downArrowButtons = []
     reg = None
     entryFrame : Frame
     clearFrame : Frame
@@ -75,12 +77,25 @@ class TextLabel(CustomLabel):
         button = ttk.Button(self.entryFrame, text="Remove " + str(self.removeButtons.__len__()+1), command=lambda: self.RemoveLine(index))
         button.grid(row=self.removeButtons.__len__()+rowOffset, column=3)
         self.removeButtons.append(button)
+        
+        index = self.upArrowButtons.__len__()
+        up = ttk.Button(self.entryFrame, text="/\\", command=lambda: self.SwapLines(index, index-1))
+        up.grid(row=self.upArrowButtons.__len__()+rowOffset, column=4)
+        self.upArrowButtons.append(up)
+
+        down = ttk.Button(self.entryFrame, text="\\/", command=lambda: self.SwapLines(index, index+1))
+        down.grid(row=self.downArrowButtons.__len__()+rowOffset, column=5)
+        self.downArrowButtons.append(down)
 
         for i in self.entries:
             i.lift()
         for i in self.checkBoxes:
             i.lift()
         for i in self.removeButtons:
+            i.lift()
+        for i in self.upArrowButtons:
+            i.lift()
+        for i in self.downArrowButtons:
             i.lift()
 
     def RemoveLastLine(self):
@@ -100,6 +115,11 @@ class TextLabel(CustomLabel):
             self.checkBoxes.pop(index)
             self.removeButtons[index].destroy()
             self.removeButtons.pop(index)
+            self.upArrowButtons[index].destroy()
+            self.upArrowButtons.pop(index)
+            self.downArrowButtons[index].destroy()
+            self.downArrowButtons.pop(index)
+
 
             self.texts.pop(index)
             self.clears.pop(index)
@@ -122,6 +142,22 @@ class TextLabel(CustomLabel):
                 if i >= index and index != -1:
                     self.removeButtons[i].grid_configure(row=self.removeButtons[i].grid_info()['row']-1)
             
+            for i in range(self.upArrowButtons.__len__()):
+                self.upArrowButtons[i].configure(command=lambda: self.SwapLines(i, i-1))
+                if i >= index and index != -1:
+                    self.upArrowButtons[i].grid_configure(row=self.upArrowButtons[i].grid_info()['row']-1)
+            
+            for i in range(self.downArrowButtons.__len__()):
+                self.downArrowButtons[i].configure(command=lambda: self.SwapLines(i, i+1))
+                if i >= index and index != -1:
+                    self.downArrowButtons[i].grid_configure(row=self.downArrowButtons[i].grid_info()['row']-1)
+            
+    def SwapLines(self, fromIndex : int, toIndex : int):
+        if toIndex < 0 or toIndex > self.entries.__len__():
+            return
+        holdstr : str = self.texts[fromIndex].get()
+        self.texts[fromIndex].set(self.texts[toIndex].get())
+        self.texts[toIndex].set(holdstr)
 
     def ClearAll(self):
         self.texts.clear()
@@ -138,7 +174,14 @@ class TextLabel(CustomLabel):
         for i in self.removeButtons:
             i.destroy()
         self.removeButtons.clear()
+        for i in self.upArrowButtons:
+            i.destroy()
+        self.upArrowButtons.clear()
+        for i in self.downArrowButtons:
+            i.destroy()
+        self.downArrowButtons.clear()
         self.labels.clear()
+        
 
         self.reversePrint.set(False)
 

@@ -15,7 +15,7 @@ class ZebraPrinter:
 
     def SetLabel(self, label : CustomLabel):
         self.label = label
-        self.label.testObserve.on('Print', self.Print)
+        self.label.testObserve.SetFunc(self.Print)
 
     def Print(self):
         data = self.label.GetPrintData()
