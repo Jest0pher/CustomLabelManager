@@ -153,7 +153,7 @@ class TextLabel(CustomLabel):
                     self.downArrowButtons[i].grid_configure(row=self.downArrowButtons[i].grid_info()['row']-1)
             
     def SwapLines(self, fromIndex : int, toIndex : int):
-        if toIndex < 0 or toIndex > self.entries.__len__():
+        if toIndex < 0 or toIndex >= self.entries.__len__():
             return
         holdstr : str = self.texts[fromIndex].get()
         self.texts[fromIndex].set(self.texts[toIndex].get())
