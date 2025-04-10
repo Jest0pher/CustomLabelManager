@@ -1,8 +1,9 @@
 from GlobalImport import *
+from PrintPassing import PrintPassing
 
 class CustomLabel:
 
-    testObserve = Ob
+    testObserve = PrintPassing
     l : zpl.Label
     width : float
     height : float
@@ -41,9 +42,7 @@ class CustomLabel:
         self.width = width
         self.height = height
         self.mm = mm
-        self.testObserve = Ob()
-        self.testObserve.Print = obEvent()
-        self.testObserve.events['Print'] = self.testObserve.Print
+        self.testObserve = PrintPassing()
 
         self.root = master
         self.frame = Frame(master=master)
@@ -114,7 +113,7 @@ class CustomLabel:
 
     def PrintTrigger(self):
         for i in range(self.count.get()):
-            self.testObserve.trigger('Print')
+            self.testObserve.CallFunc()
 
     def Load(self, loadOverride : dict = None):
         loadDict : dict = {}
