@@ -78,8 +78,11 @@ class LabelManager:
         switchButton = Radiobutton(self.frame, text="Switch", value='2', variable=self.currentButton, command=self.CreateSwitchLabel)
         switchButton.grid(column=0,row=currentRow+2)
 
-        switchButton = Radiobutton(self.frame, text="Text", value='3', variable=self.currentButton, command=self.CreateTextLabel)
-        switchButton.grid(column=0,row=currentRow+3)
+        watchButton = Radiobutton(self.frame, text="Watch", value='3', variable=self.currentButton, command=self.CreateWatchLabel)
+        watchButton.grid(column=0,row=currentRow+3)
+        
+        switchButton = Radiobutton(self.frame, text="Text", value='4', variable=self.currentButton, command=self.CreateTextLabel)
+        switchButton.grid(column=0,row=currentRow+4)
 
         #self.buttons = [serialButton, qtyButton]
 
@@ -121,9 +124,15 @@ class LabelManager:
             switchLabel = SwitchLabel(self.root, width=self.labelWidth, height=self.labelHeight, mm=self.units.get(),startRow=0, startColumn=2)
             self.labelPrinter.SetLabel(switchLabel)
     
-    def CreateTextLabel(self):
+    def CreateWatchLabel(self):
         self.UpdateLabelSize()
         if self.ToggleButton(3):
+            watchLabel = WatchLabel(self.root, width=self.labelWidth, height=self.labelHeight, mm=self.units.get(),startRow=0, startColumn=2)
+            self.labelPrinter.SetLabel(watchLabel)
+
+    def CreateTextLabel(self):
+        self.UpdateLabelSize()
+        if self.ToggleButton(4):
             textLabel = TextLabel(self.root, width=self.labelWidth, height=self.labelHeight, mm=self.units.get(), startRow=0, startColumn=2)
             self.labelPrinter.SetLabel(textLabel)
     #def TestFunc(self):
