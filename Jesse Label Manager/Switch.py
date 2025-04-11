@@ -22,6 +22,11 @@ class SwitchLabel(CustomLabel):
     clearSN : BooleanVar
     clearButton : Checkbutton
 
+    previousSerial : StringVar
+    prevSerialLabel : ttk.Label
+
+    printSerial : BooleanVar
+
     switchL : zpl.Label
 
     def __init__(self, master, width : float, height : float, mm : str, startColumn : int=0, startRow : int=0, initials = "", po = "") -> None:
@@ -49,14 +54,16 @@ class SwitchLabel(CustomLabel):
         self.storageLabel = ttk.Label(self.frame, text="Storage: 32 GB")
         self.RadioChanged()
         self.storageLabel.grid(column=startColumn+4, row=startRow)
-
+        
         ttk.Label(self.frame,text="PO").grid(column=startColumn,row=startRow+1)
         ttk.Entry(self.frame,textvariable=self.po).grid(column=startColumn+1,row=startRow+1)
         ttk.Label(self.frame,text="Initials").grid(column=startColumn+3,row=startRow+1)
         ttk.Entry(self.frame,textvariable=self.initials).grid(column=startColumn+4,row=startRow+1)
 
-        ttk.Label(self.frame, text="").grid(column=startColumn,row=startRow+2)
-
+        ttk.Label(self.frame, text="Print Serial").grid(column=startColumn+2,row=startRow+2)
+        self.printSerial = BooleanVar()
+        ttk.Checkbutton(self.frame, variable=self.printSerial).grid(column=startColumn+3, row=startRow+2)
+        
         ttk.Label(self.frame, text="Color").grid(column=startColumn+1, row=startRow+3)
         self.color = StringVar(value="Black")
         self.colorEntry = ttk.Entry(self.frame, textvariable=self.color)
@@ -71,10 +78,19 @@ class SwitchLabel(CustomLabel):
         self.clearButton = ttk.Checkbutton(self.frame, variable=self.clearSN)
         self.clearButton.grid(column=startColumn+4, row=startRow+4)
 
+        self.previousSerial = StringVar()
+        ttk.Label(self.frame, text="Previous").grid(row=startRow+4, column=startColumn+2)
+        self.prevSerialLabel = ttk.Label(self.frame, textvariable=self.previousSerial)
+        self.prevSerialLabel.grid(row=startRow+4, column=startColumn+3)
+        ttk.Button(self.frame, text="Paste Previous Entry", command=self.PastePreviousPressed).grid(column=startColumn+3, row=startRow+5)
+
         self.DisplayPrintButton(startColumn+3, startRow+8)
         
         self.Load()
     
+    def PastePreviousPressed(self):
+        self.sn.set(self.previousSerial.get())
+
     def RadioChanged(self):
         if self.switchType.get() == "Normal":
             self.storageSize.set("32 GB")
@@ -130,12 +146,17 @@ class SwitchLabel(CustomLabel):
             self.SetSwitchData()
         data = self.switchL.dumpZPL()
         #print(data)
-        return self.l.dumpZPL() + self.switchL.dumpZPL()
+        if self.printSerial.get():
+            return self.l.dumpZPL() + self.switchL.dumpZPL()
+        else:
+            return self.switchL.dumpZPL()
     
     def PrintTrigger(self):
         super().PrintTrigger()
+        self.previousSerial.set(self.sn.get())
         if self.clearSN.get() == True:
             self.sn.set("")
+        self.serialEntry.focus_set()
     
     def Load(self, loadOverride : dict = None):
         super().Load(loadOverride=loadOverride)
@@ -161,6 +182,10 @@ class SwitchLabel(CustomLabel):
                 self.sn.set(loadDict["serial"])
             if "clear" in keys:
                 self.clearSN.set(loadDict["clear"])
+            if "previous" in keys:
+                self.previousSerial.set(value=loadDict["previous"])
+            if "printSerial" in keys:
+                self.printSerial.set(value=loadDict["printSerial"])
         return
     
     def Save(self) -> dict:
@@ -171,4 +196,6 @@ class SwitchLabel(CustomLabel):
         saveDict["initials"] = self.initials.get()
         saveDict["serial"] = self.sn.get()
         saveDict["clear"] = self.clearSN.get()
+        saveDict["previous"] = self.previousSerial.get()
+        saveDict["printSerial"] = self.printSerial.get()
         return saveDict
