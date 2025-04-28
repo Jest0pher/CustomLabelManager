@@ -114,11 +114,14 @@ class SwitchLabel(CustomLabel):
         self.l.zpl_raw("^BY2")
         self.l.barcode('C', self.sn.get(), height=60, mode='A')
         self.l.endorigin()
-        self.l.origin(4,19)
+        self.l.origin(4,21)
         self.l.write_text("PO: " + self.po.get(), char_height=3, char_width=3, line_width=30, justification='L')
         self.l.endorigin()
         self.l.origin(37,19)
         self.l.write_text(self.initials.get().upper(), char_height=4, char_width=4, line_width=30, justification='L')
+        self.l.endorigin()
+        self.l.origin(4,17)
+        self.l.write_text("Model: " + self.model.get(), char_height=3, char_width=3, line_width=30, justification='L')
         self.l.endorigin()
     
     def SetSwitchData(self):

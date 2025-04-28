@@ -13,6 +13,7 @@ class SerialLabel(CustomLabel):
         note : StringVar
         noteEntry : Entry
         clearNote : BooleanVar
+        countLabel : ttk.Label
         
         def CSVStartRecord(self):
             if self.record == True:
@@ -71,27 +72,35 @@ class SerialLabel(CustomLabel):
                     except Exception as e:
                         print(e)
                         pass
+            self.UpdateCount()
 
         def CSVDeleteLast(self):
             self.array.pop()
             self.listVar.set(self.array)
+            self.UpdateCount()
             
         def CSVDeleteSelected(self):
             index = self.listBox.curselection()
             if len(index) > 0:
                 self.array.pop(index[0])
                 self.listVar.set(self.array)
+            self.UpdateCount()
             
         def CSVClearList(self):
             self.array.clear()
             self.listVar.set(self.array)
+
+        def UpdateCount(self):
+            self.countLabel.configure(text="Count: " + str(self.array.__len__()))
 
         def ConstructWindow(self, parentFrame :ttk.Frame, startColumn : int, startRow : int):
             self.frame = Frame(parentFrame)
             self.frame.grid(column=startColumn,row=startRow)
             ttk.Label(self.frame, text="Record to CSV file").grid(column=0, row=0)
             self.filename = StringVar(value="CSVExport")
-            ttk.Label(self.frame,text="CSV Filename: ").grid(column=0, row=1)
+            ttk.Label(self.frame, text="CSV Filename:").grid(column=1, row=0)
+            self.countLabel = ttk.Label(self.frame,text="Count: ")
+            self.countLabel.grid(column=0, row=1)
             ttk.Entry(self.frame, textvariable=self.filename).grid(column=1,row=1)
             ttk.Label(self.frame,text="Printed Serials").grid(column=0, row=2)
             self.listVar = StringVar(value=self.array)
@@ -144,6 +153,7 @@ class SerialLabel(CustomLabel):
                 #Once note entry and variable set up
                 if self.clearNote.get() == True:
                     self.csvNote.set("")
+                self.UpdateCount()
         
         def Save(self):
             #Save directly to file
@@ -175,6 +185,7 @@ class SerialLabel(CustomLabel):
                     except json.JSONDecodeError as jsonError:
                         print("Corrupt File")
                         os.remove(filePath)
+            self.UpdateCount()
             pass
 
     initials : StringVar

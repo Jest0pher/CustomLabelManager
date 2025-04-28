@@ -28,7 +28,7 @@ class LabelManager:
         self.root.wm_protocol("WM_DELETE_WINDOW", self.CloseWindow)
         self.frame = Frame(self.root,padx=10, pady=10)
         self.frame.grid()
-        ttk.Label(self.frame, text="Version 1.0").grid(row=0, column=0)
+        ttk.Label(self.frame, text="").grid(row=0, column=0)
         self.queues = self.labelPrinter.z.getqueues()
         self.currentPrinter = StringVar(self.root, self.queues[0])
         self.labelPrinter.SetCurrentPrinter(self.currentPrinter.get())
