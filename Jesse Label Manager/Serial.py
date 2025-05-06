@@ -14,7 +14,7 @@ class SerialLabel(CustomLabel):
         noteEntry : Entry
         clearNote : BooleanVar
         countLabel : ttk.Label
-        
+        csvHeader : str = "PO,Prefix,Serials,Model,Notes"
         def CSVStartRecord(self):
             if self.record == True:
                 self.record = False
@@ -39,7 +39,7 @@ class SerialLabel(CustomLabel):
 
             filePath = os.path.join(directory, self.filename.get()+".csv")
             csvFile = open(filePath, "w")
-            csvFile.write("PO;Prefix;Serials;Model;Notes\n")
+            csvFile.write(self.csvHeader+"\n")
             for i in self.array:
                 csvFile.write(str(i) + "\n")       
             csvFile.close()
@@ -53,7 +53,7 @@ class SerialLabel(CustomLabel):
                         valid : bool = False
                         for i in loadFile:
                             if counter == 0:
-                                if i.__contains__("PO;Prefix;Serials;Model;Notes"):
+                                if i.__contains__(self.csvHeader):
                                     valid = True
                                     self.array.clear()
                                 else:
@@ -396,7 +396,10 @@ class SerialLabel(CustomLabel):
     
     def PrintTrigger(self):
         super().PrintTrigger()
-        self.csvExporter.CSVNewEntry(self.po.get(), self.prefix.get(), self.sn.get(), self.model.get())
+        tempPrefix = self.prefix.get()
+        if tempPrefix == "Custom":
+            tempPrefix = self.radioEntryVar.get()
+        self.csvExporter.CSVNewEntry(self.po.get(), tempPrefix, self.sn.get(), self.model.get())
         self.previousSerial.set(self.sn.get())
         if self.clearSN.get() == True:
             self.sn.set("")
