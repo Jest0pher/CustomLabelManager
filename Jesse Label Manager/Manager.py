@@ -81,8 +81,11 @@ class LabelManager:
         watchButton = Radiobutton(self.frame, text="Watch", value='3', variable=self.currentButton, command=self.CreateWatchLabel)
         watchButton.grid(column=0,row=currentRow+3)
         
-        switchButton = Radiobutton(self.frame, text="Text", value='4', variable=self.currentButton, command=self.CreateTextLabel)
-        switchButton.grid(column=0,row=currentRow+4)
+        textButton = Radiobutton(self.frame, text="Text", value='4', variable=self.currentButton, command=self.CreateTextLabel)
+        textButton.grid(column=0,row=currentRow+4)
+
+        airpodsButton = Radiobutton(self.frame, text="Airpods", value='5', variable=self.currentButton, command=self.CreateAirpodsLabel)
+        airpodsButton.grid(column=0,row=currentRow+5)
 
         #self.buttons = [serialButton, qtyButton]
 
@@ -135,6 +138,12 @@ class LabelManager:
         if self.ToggleButton(4):
             textLabel = TextLabel(self.root, width=self.labelWidth, height=self.labelHeight, mm=self.units.get(), startRow=0, startColumn=2)
             self.labelPrinter.SetLabel(textLabel)
+    
+    def CreateAirpodsLabel(self):
+        self.UpdateLabelSize()
+        if self.ToggleButton(5):
+            airpodsLabel = AirpodsLabel(self.root, width=self.labelWidth, height=self.labelHeight, mm=self.units.get(), startRow=0, startColumn=2)
+            self.labelPrinter.SetLabel(airpodsLabel)
     #def TestFunc(self):
     #    if self.ToggleButton(1):
     #        print("test")
@@ -194,7 +203,7 @@ class LabelManager:
         self.root.destroy()
     
     def Save(self) -> dict:
-        return {"labelw" : self.labelWidth, "labelh" : self.labelHeight, "units" : self.units.get()}
+        return {"labelw" : self.labelWidth, "labelh" : self.labelHeight, "units" : self.units.get(), "printer" : self.currentPrinter.get()}
     
     def Load(self,loadDict : dict):
         keys = loadDict.keys()
@@ -212,4 +221,7 @@ class LabelManager:
                 self.hEntry.set(str(self.labelHeight/25.4))
             else:
                 self.hEntry.set(str(self.labelHeight))
+        if "printer" in keys:
+            self.currentPrinter.set(loadDict["printer"])
+            self.labelPrinter.SetCurrentPrinter(self.currentPrinter.get())
         self.UpdateLabelSize()
