@@ -4,6 +4,7 @@ from zebra import Zebra
 import zpl
 import os
 import json
+import pyperclip
 
 directory :str = os.path.expanduser('~\Documents\CustomLabels')
 

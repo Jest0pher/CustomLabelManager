@@ -16,6 +16,7 @@ class AirpodsLabel(CustomLabel):
     printType : StringVar
     radioIndividual : Radiobutton
     radioComplete : Radiobutton
+    radioPrint : Radiobutton
 
     allSN : StringVar
     prevAllSN : StringVar
@@ -53,9 +54,33 @@ class AirpodsLabel(CustomLabel):
     rightL : zpl.Label
     parseError : bool = False
     snLabels = []
+    printLabelsZPL : str = ""
+    ffLabel : ttk.Label
+    goodCaseLabel : ttk.Label
+    goodLLabel : ttk.Label
+    goodRLabel : ttk.Label
+    badCaseLabel : ttk.Label
+    badLLabel : ttk.Label
+    badRLabel : ttk.Label
+    ffStr : StringVar
+    goodCaseStr : StringVar
+    goodLStr : StringVar
+    goodRStr : StringVar
+    badCaseStr : StringVar
+    badLStr : StringVar
+    badRStr : StringVar
+    ffEntry : ttk.Entry
+    goodCaseEntry : ttk.Entry
+    goodLEntry : ttk.Entry
+    goodREntry : ttk.Entry
+    badCaseEntry : ttk.Entry
+    badLEntry : ttk.Entry
+    badREntry : ttk.Entry
+    icloudBool : BooleanVar
+    icloudCheck : ttk.Checkbutton
 
-    caseModels = ["A1602", "A1938", "A2190", "A2566", "A2700", "A2897", "A2968"]
-    budsModels = [[("A1722","A1523"),("A2031","A2032")], [("A1722","A1523"),("A2031","A2032")], [("A2084", "A2083")], [("A2564", "A2565")], [("A2699","A2698")], [("A2564", "A2565")], [("A3048", "A3047"), ("A3049", "A3049")]]
+    caseModels = ["A1602", "A1938", "A2190", "A2566", "A2700", "A2897", "A2968","A3058","A3059"]
+    budsModels = [[("A1722","A1523"),("A2031","A2032")], [("A1722","A1523"),("A2031","A2032")], [("A2084", "A2083")], [("A2564", "A2565")], [("A2699","A2698")], [("A2564", "A2565")], [("A3048", "A3047"), ("A3049", "A3049")],[("A3053","A3050")],[("A3056","A3055")]]
     currentLBuds : list[str] = ["1","3"]
     currentRBuds : list[str] = ["2","4"]
     
@@ -104,15 +129,58 @@ class AirpodsLabel(CustomLabel):
 
         self.printType = StringVar(value="Individual")
         self.radioIndividual = Radiobutton(self.frame, text="Individual", value='Individual', variable=self.printType, command=self.PrintTypeChanged)
-        self.radioIndividual.grid(column=startColumn+1, row=startRow+3)
+        self.radioIndividual.grid(column=startColumn+2, row=startRow+3)
         self.radioComplete = Radiobutton(self.frame, text="Complete", value='Complete', variable=self.printType, command=self.PrintTypeChanged)
-        self.radioComplete.grid(column=startColumn+4, row=startRow+3)
+        self.radioComplete.grid(column=startColumn+3, row=startRow+3)
+        self.radioPrint = Radiobutton(self.frame, text="Print", value='Print', variable=self.printType, command=self.PrintTypeChanged)
+        self.radioPrint.grid(column=startColumn+4, row=startRow+3)
         
         ttk.Label(self.frame, text=" ").grid(column=startColumn,row=startRow+4)
 
         self.serialEntryStartCol=startColumn
         self.serialEntryStartRow=startRow+5
-        
+
+        self.ffStr = StringVar()
+        self.goodCaseStr = StringVar()
+        self.goodLStr = StringVar()
+        self.goodRStr = StringVar()
+        self.badCaseStr = StringVar()
+        self.badLStr = StringVar()
+        self.badRStr = StringVar()
+        self.icloudBool = BooleanVar(value=True)
+        self.ffLabel = ttk.Label(self.frame, text="Fully Functional:")
+        self.ffLabel.grid(column=startColumn+1, row=self.serialEntryStartRow)
+        self.ffEntry = ttk.Entry(self.frame, textvariable=self.ffStr)
+        self.ffEntry.grid(column=startColumn+2, row=self.serialEntryStartRow)
+        self.goodCaseLabel = ttk.Label(self.frame, text="Good Case:")
+        self.goodCaseLabel.grid(column=startColumn+1, row=self.serialEntryStartRow+1)
+        self.goodCaseEntry = ttk.Entry(self.frame, textvariable=self.goodCaseStr)
+        self.goodCaseEntry.grid(column=startColumn+2, row=self.serialEntryStartRow+1)
+        self.goodLLabel = ttk.Label(self.frame, text="Good L Bud:")
+        self.goodLLabel.grid(column=startColumn+1, row=self.serialEntryStartRow+2)
+        self.goodLEntry = ttk.Entry(self.frame, textvariable=self.goodLStr)
+        self.goodLEntry.grid(column=startColumn+2, row=self.serialEntryStartRow+2)
+        self.goodRLabel = ttk.Label(self.frame, text="Good R Bud:")
+        self.goodRLabel.grid(column=startColumn+1, row=self.serialEntryStartRow+3)
+        self.goodREntry = ttk.Entry(self.frame, textvariable=self.goodRStr)
+        self.goodREntry.grid(column=startColumn+2, row=self.serialEntryStartRow+3)
+        self.badCaseLabel = ttk.Label(self.frame, text="Bad Case:")
+        self.badCaseLabel.grid(column=startColumn+3, row=self.serialEntryStartRow)
+        self.badCaseEntry = ttk.Entry(self.frame, textvariable=self.badCaseStr)
+        self.badCaseEntry.grid(column=startColumn+4, row=self.serialEntryStartRow)
+        self.badLLabel = ttk.Label(self.frame, text="Bad L Bud:")
+        self.badLLabel.grid(column=startColumn+3, row=self.serialEntryStartRow+1)
+        self.badLEntry = ttk.Entry(self.frame, textvariable=self.badLStr)
+        self.badLEntry.grid(column=startColumn+4, row=self.serialEntryStartRow+1)
+        self.badRLabel = ttk.Label(self.frame, text="Bad R Bud:")
+        self.badRLabel.grid(column=startColumn+3, row=self.serialEntryStartRow+2)
+        self.badREntry = ttk.Entry(self.frame, textvariable=self.badRStr)
+        self.badREntry.grid(column=startColumn+4, row=self.serialEntryStartRow+2)
+        self.icloudCheck = ttk.Checkbutton(self.frame, text="iCloud Locked", variable=self.icloudBool)
+        self.icloudCheck.grid(column=startColumn+4, row=self.serialEntryStartRow+3)
+
+        self.HidePrint()
+
         self.allSN = StringVar(value="")
         self.allSNLabel = ttk.Label(self.frame, text="Serial Numbers")
         self.allSNLabel.grid(column=startColumn+2, row=self.serialEntryStartRow)
@@ -177,7 +245,9 @@ class AirpodsLabel(CustomLabel):
         self.prevLeftSNButton.grid(column=startColumn+3, row=self.serialEntryStartRow+2)
         self.prevRightSNButton = Button(self.frame, text="Paste Previous Right", command=self.PastePrevRight)
         self.prevRightSNButton.grid(column=startColumn+5, row=self.serialEntryStartRow+2)
-        
+
+        self.HideIndividual()
+
         ttk.Label(self.frame, text=" ").grid(column=startColumn+1,row=self.serialEntryStartRow+3)
 
         self.DisplayPrintButton(startColumn+3, self.serialEntryStartRow+4)
@@ -209,10 +279,16 @@ class AirpodsLabel(CustomLabel):
         print(self.printType.get())
         if self.printType.get() == "Individual":
             self.HideComplete()
+            self.HidePrint()
             self.ShowIndividual()
             self.caseSNEntry.focus_set()
+        elif self.printType.get() == "Print":
+            self.HideIndividual()
+            self.HideComplete()
+            self.ShowPrint()
         else:
             self.HideIndividual()
+            self.HidePrint()
             self.ShowComplete()
             self.allSNEntry.focus_set()
     
@@ -280,6 +356,72 @@ class AirpodsLabel(CustomLabel):
         self.allFormatCL.grid()
         self.allFormatCR.grid()
         self.allFormatLR.grid()
+    
+    def HidePrint(self):
+        self.ffLabel.grid_remove()
+        self.ffEntry.grid_remove()
+        self.goodCaseLabel.grid_remove()
+        self.goodCaseEntry.grid_remove()
+        self.goodLLabel.grid_remove()
+        self.goodLEntry.grid_remove()
+        self.goodRLabel.grid_remove()
+        self.goodREntry.grid_remove()
+        self.badCaseLabel.grid_remove()
+        self.badCaseEntry.grid_remove()
+        self.badLLabel.grid_remove()
+        self.badLEntry.grid_remove()
+        self.badRLabel.grid_remove()
+        self.badREntry.grid_remove()
+        self.icloudCheck.grid_remove()
+
+    def ShowPrint(self):
+        self.ffLabel.grid()
+        self.ffEntry.grid()
+        self.goodCaseLabel.grid()
+        self.goodCaseEntry.grid()
+        self.goodLLabel.grid()
+        self.goodLEntry.grid()
+        self.goodRLabel.grid()
+        self.goodREntry.grid()
+        self.badCaseLabel.grid()
+        self.badCaseEntry.grid()
+        self.badLLabel.grid()
+        self.badLEntry.grid()
+        self.badRLabel.grid()
+        self.badREntry.grid()
+        self.icloudCheck.grid()
+
+    def PrintBagLabels(self):
+        self.printLabelsZPL = ""
+        texts = ["Fully Functional",self.caseModel.get(),f"QTY: {self.ffStr.get()}",f"PO:{self.po.get()}","",
+                 "Good Case",self.caseModel.get(),f"QTY: {self.goodCaseStr.get()}",f"PO:{self.po.get()}","",
+                 "Good L Bud",self.leftModel.get(),f"QTY: {self.goodLStr.get()}",f"PO:{self.po.get()}","",
+                 "Good R Bud",self.rightModel.get(),f"QTY: {self.goodRStr.get()}",f"PO:{self.po.get()}","",
+                 "Bad Case",self.caseModel.get(),f"QTY: {self.badCaseStr.get()}",f"PO:{self.po.get()}","",
+                 "Bad L Bud",self.leftModel.get(),f"QTY: {self.badLStr.get()}",f"PO:{self.po.get()}","",
+                 "Bad R Bud",self.rightModel.get(),f"QTY: {self.badRStr.get()}",f"PO:{self.po.get()}","",
+                 "ICloud Locked","Mixed Defective/Functional",self.leftModel.get() + "/" + self.rightModel.get(),f"PO:{self.po.get()}","",]
+        for offset in range(8):
+            label = zpl.Label(self.height,self.width, 11.8)
+            originY = 3
+            skipped = False
+            if offset == 7:
+                if self.icloudBool.get() == False:
+                    continue
+            for i in range(5):
+                index = 5*offset + i
+                if texts[index] == "QTY: ":
+                    skipped = True
+                    break
+                if index >= texts.__len__():
+                    break
+                label.origin(2, originY)
+                TextBoxResize(label, texts[index],self.width, self.height)
+                label.endorigin()
+                originY += 5
+            if skipped == False:
+                self.printLabelsZPL += label.dumpZPL()
+        
 
     def ParseCompleteSerials(self) -> list[str]:
         serials : list[str] = self.allSN.get().split('\t')
@@ -299,6 +441,9 @@ class AirpodsLabel(CustomLabel):
             caseStr = self.caseSN.get().upper()
             leftStr = self.leftSN.get().upper()
             rightStr = self.rightSN.get().upper()
+        elif self.printType.get() == "Print":
+            self.l = self.PrintBagLabels()
+            return
         else:
             serials : list[str] = self.ParseCompleteSerials()
             if self.parseError == False:
@@ -365,6 +510,8 @@ class AirpodsLabel(CustomLabel):
             self.prevRightSN.set(self.rightSN.get())
             self.rightSN.set("")
             self.caseSNEntry.focus_set()
+        elif self.printType.get() == "Print":
+            pass
         else:
             self.prevAllSN.set(self.allSN.get())
             self.allSN.set("")
@@ -384,6 +531,8 @@ class AirpodsLabel(CustomLabel):
                     return self.l.dumpZPL() + self.rightL.dumpZPL()
                 case "LR":
                     return self.leftL.dumpZPL() + self.rightL.dumpZPL()
+        elif self.printType.get() == "Print":
+            return self.printLabelsZPL
         else:
             return self.EmptyCheck("case") + self.EmptyCheck("left") + self.EmptyCheck("right")
         return ""
@@ -448,6 +597,10 @@ class AirpodsLabel(CustomLabel):
             self.HideIndividual()
             self.ShowComplete()
             self.allSNEntry.focus_set()
+        elif self.printType.get() == "Print":
+            self.HideIndividual()
+            self.HideComplete()
+            self.ShowPrint()
         else:
             self.caseSNEntry.focus_set()
 

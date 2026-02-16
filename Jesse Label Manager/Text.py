@@ -17,7 +17,14 @@ class TextLabel(CustomLabel):
     reg = None
     entryFrame : Frame
     clearFrame : Frame
+    profileFrame : Frame
     reversePrint : BooleanVar
+    profileName : StringVar
+    profilesDict : dict = {}
+    profileNames = []
+    profileLabel : Label
+    profileButtons = []
+    profileGridWidth = 5
     
     def __init__(self, master, width : float, height : float, mm : str, startColumn : int=0, startRow : int=0, initials = "", po = "") -> None:
         super().__init__(master=master, width=width, mm=mm, height=height, startColumn=startColumn, startRow=startRow)
@@ -39,6 +46,14 @@ class TextLabel(CustomLabel):
         ttk.Button(buttonFrame, text="Remove Last", command=self.RemoveLastLine).grid(row=startRow, column=startColumn+1)
         ttk.Button(buttonFrame, text="Clear All", command=self.ClearAllLines).grid(row=startRow, column=startColumn+2)
         ttk.Button(buttonFrame, text="Reset", command=self.Reset).grid(row=startRow, column=startColumn+3)
+        saveFrame = Frame(self.frame)
+        saveFrame.grid(row=startRow+1,column=startColumn)
+        self.profileName = StringVar()
+        Entry(saveFrame, textvariable=self.profileName,width=15, validate="key", validatecommand=(self.reg, '%P')).grid(row=0, column=startColumn+1)
+        ttk.Button(saveFrame, text="Save Profile", command=self.ProfileSave).grid(row=0,column=startColumn+2)
+        ttk.Button(saveFrame, text="Delete Profile", command=self.DeleteProfile).grid(row=0,column=startColumn+3)
+        self.profileLabel = ttk.Label(saveFrame, text="")
+        self.profileLabel.grid(row=0, column=startColumn + 4)
         startRow += 1
         self.entryFrame = Frame(self.frame)
         self.entryFrame.grid(row=startRow+1, column=startColumn)
@@ -55,6 +70,8 @@ class TextLabel(CustomLabel):
         ttk.Label(self.frame,text="").grid(row=startRow+self.entries.__len__()+2,column=startColumn)
         self.DisplayPrintButton(startColumn, startRow+self.entries.__len__()+3)
 
+        self.profileFrame = Frame(self.frame)
+        self.profileFrame.grid(column=startColumn, row=startRow+self.entries.__len__()+6)
         self.Load()
 
     def AddLine(self):
@@ -210,6 +227,59 @@ class TextLabel(CustomLabel):
             for i in self.clears:
                 i.set(False)
 
+    def ProfileSave(self):
+        if not self.profileName.get() in self.profileNames:
+            self.AddProfileButton(self.profileName.get())
+            self.profileNames.append(self.profileName.get())
+        
+        clearArr = []
+        stringArr = []
+        for i in range(self.texts.__len__()):
+            stringArr.append(self.texts[i].get())
+            if i < self.clears.__len__():
+                clearArr.append(self.clears[i].get())
+        self.profilesDict[self.profileName.get() + "_lines"] = stringArr
+        self.profilesDict[self.profileName.get() + "_clear"] = clearArr
+        self.profileLabel.configure(text="Profile: " + self.profileName.get() + " saved")
+        self.profileName.set("")
+    
+    def ProfileLoad(self, profileName : str):
+        self.ClearAll()
+        if profileName+"_lines" in self.profilesDict.keys() and profileName+"_clear" in self.profilesDict.keys():
+            for i in range(self.profilesDict[profileName+"_lines"].__len__()):
+                self.AddLine()
+                self.texts[self.texts.__len__()-1].set(self.profilesDict[profileName+"_lines"][i])
+                self.clears[self.texts.__len__()-1].set(self.profilesDict[profileName+"_clear"][i])
+            self.profileLabel.configure(text="Profile: " + profileName + " loaded")
+            return
+        self.profileLabel.configure(text="Profile error: Not found")
+    
+    def AddProfileButton(self, profileName : str):
+        self.profileButtons.append(ttk.Button(self.profileFrame, text=profileName, command=lambda: self.ProfileLoad(profileName)))
+        index = self.profileButtons.__len__()-1
+        y = int(index / self.profileGridWidth)
+        x = index - y*self.profileGridWidth
+        self.profileButtons[index].grid(row=y, column=x)
+        
+
+    def DeleteProfile(self):
+        for i in range(self.profileNames.__len__()):
+            if self.profileNames[i] == self.profileName.get():
+                self.profileNames.pop(i)
+                self.profileButtons[i].destroy() #Make sure destroy wont remove from buttons array
+                self.profileButtons.pop(i)
+                self.SortProfileButtons()
+                self.profileLabel.configure(text="Profile: " + self.profileName.get() + " removed")
+                self.profileName.set("")
+                break
+    
+    def SortProfileButtons(self):
+        for i in range(self.profileButtons.__len__()):
+            y = int(i / self.profileGridWidth)
+            x = i - y*self.profileGridWidth
+            self.profileButtons[i].grid(row=y, column=x)
+
+
     def LabelClosed(self):
         super().LabelClosed()
         self.ClearAll()
@@ -278,8 +348,18 @@ class TextLabel(CustomLabel):
                         self.clears[i].set(loadDict["clear"][i])
             if "reverse" in keys:
                 self.reversePrint.set(loadDict["reverse"])
+            if "currentProfile" in keys:
+                self.profileName.set(loadDict["currentProfile"])
+            for i in keys:
+                if i.__contains__("_lines") or i.__contains__("_clear"):
+                    self.profilesDict[i] = loadDict[i]
+                    split : str = i.split("_")[0]
+                    if not self.profileNames.__contains__(split):
+                        self.profileNames.append(split)
+            for i in self.profileNames:
+                self.AddProfileButton(i)
         return
-    
+
     def Save(self) -> dict:
         saveDict : dict = {}
         clearArr = []
@@ -291,4 +371,7 @@ class TextLabel(CustomLabel):
         saveDict["lines"] = stringArr
         saveDict["clear"] = clearArr
         saveDict["reverse"] = self.reversePrint.get()
+        saveDict["currentProfile"] = self.profileName.get()
+        for i in self.profilesDict.keys():
+            saveDict[i] = self.profilesDict[i]
         return saveDict

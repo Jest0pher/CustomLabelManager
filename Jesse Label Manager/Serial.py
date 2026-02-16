@@ -401,6 +401,7 @@ class SerialLabel(CustomLabel):
             tempPrefix = self.radioEntryVar.get()
         self.csvExporter.CSVNewEntry(self.po.get(), tempPrefix, self.sn.get(), self.model.get())
         self.previousSerial.set(self.sn.get())
+        pyperclip.copy(self.sn.get())
         if self.clearSN.get() == True:
             self.sn.set("")
         self.serialEntry.focus_set()
