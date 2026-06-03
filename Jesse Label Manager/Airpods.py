@@ -13,6 +13,7 @@ class AirpodsLabel(CustomLabel):
     rightModel : StringVar
     rightOptions : OptionMenu
 
+    scpoBuds : BooleanVar
     printType : StringVar
     radioIndividual : Radiobutton
     radioComplete : Radiobutton
@@ -78,9 +79,14 @@ class AirpodsLabel(CustomLabel):
     badREntry : ttk.Entry
     icloudBool : BooleanVar
     icloudCheck : ttk.Checkbutton
+    engravedButton : ttk.Button
+    printEngravedQueued : bool = False
+    engravedZPL : str = "^XA^PW599^LL299^FO23,35^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,94^A0N,41,41^FB599,1,0,L,0^FDEngraved^FS^FO23,153^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,212^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,271^A0N,41,41^FB599,1,0,L,0^FD^FS^XZ"
+    printMismatchedQueued : bool = False
+    mismatchedZPL : str = "^XA^PW599^LL299^FO23,35^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,94^A0N,41,41^FB599,1,0,L,0^FDMismatched^FS^FO23,153^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,212^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,271^A0N,41,41^FB599,1,0,L,0^FD^FS^XZ"
 
-    caseModels = ["A1602", "A1938", "A2190", "A2566", "A2700", "A2897", "A2968","A3058","A3059"]
-    budsModels = [[("A1722","A1523"),("A2031","A2032")], [("A1722","A1523"),("A2031","A2032")], [("A2084", "A2083")], [("A2564", "A2565")], [("A2699","A2698")], [("A2564", "A2565")], [("A3048", "A3047"), ("A3049", "A3049")],[("A3053","A3050")],[("A3056","A3055")]]
+    caseModels = ["A1602", "A1938", "A2190", "A2566", "A2700", "A2897", "A2968","A3058","A3059", "A3122"]
+    budsModels = [[("A1722","A1523"),("A2031","A2032")], [("A1722","A1523"),("A2031","A2032")], [("A2084", "A2083")], [("A2564", "A2565")], [("A2699","A2698")], [("A2564", "A2565")], [("A3048", "A3047"), ("A3049", "A3049")],[("A3053","A3050")],[("A3056","A3055")],[("A3064","A3063")]]
     currentLBuds : list[str] = ["1","3"]
     currentRBuds : list[str] = ["2","4"]
     
@@ -127,6 +133,8 @@ class AirpodsLabel(CustomLabel):
 
         ttk.Label(self.frame, text=" ").grid(column=startColumn,row=startRow+2)
 
+        self.scpoBuds = BooleanVar(value=False)
+        Checkbutton(self.frame, text="SCPO Buds", variable=self.scpoBuds).grid(column=startColumn, row=startRow+3)
         self.printType = StringVar(value="Individual")
         self.radioIndividual = Radiobutton(self.frame, text="Individual", value='Individual', variable=self.printType, command=self.PrintTypeChanged)
         self.radioIndividual.grid(column=startColumn+2, row=startRow+3)
@@ -250,9 +258,21 @@ class AirpodsLabel(CustomLabel):
 
         ttk.Label(self.frame, text=" ").grid(column=startColumn+1,row=self.serialEntryStartRow+3)
 
-        self.DisplayPrintButton(startColumn+3, self.serialEntryStartRow+4)
+        self.engravedButton = Button(self.frame, text="Print Engraved", command=self.PrintEngravedLabel)
+        self.engravedButton.grid(column=startColumn+3, row=self.serialEntryStartRow+4)
+        self.engravedButton = Button(self.frame, text="Print Mismatched", command=self.PrintMismatchedLabel)
+        self.engravedButton.grid(column=startColumn+3, row=self.serialEntryStartRow+5)
+        self.DisplayPrintButton(startColumn+3, self.serialEntryStartRow+6)
 
         self.Load()
+
+    def PrintEngravedLabel(self):
+        self.printEngravedQueued = True
+        self.testObserve.CallFunc()
+    
+    def PrintMismatchedLabel(self):
+        self.printMismatchedQueued = True
+        self.testObserve.CallFunc()
 
     def CaseModelChanged(self, *args):
         index : int = self.caseModels.index(args[0])
@@ -265,12 +285,14 @@ class AirpodsLabel(CustomLabel):
         tempRow : int = self.leftOptions.grid_info()["row"]
         self.leftOptions.destroy()
         self.rightOptions.destroy()
-        self.leftModel.set(self.currentLBuds[0])
-        self.currentLBuds.pop(0)
+        if not self.leftModel.get() in self.currentLBuds:
+            self.leftModel.set(self.currentLBuds[0])
+        self.currentLBuds.pop(self.currentLBuds.index(self.leftModel.get()))
         self.leftOptions = OptionMenu(self.frame, self.leftModel,self.leftModel.get(), *self.currentLBuds)
         self.leftOptions.grid(column=tempColumn, row=tempRow)
-        self.rightModel.set(self.currentRBuds[0])
-        self.currentRBuds.pop(0)
+        if not self.rightModel.get() in self.currentRBuds:
+            self.rightModel.set(self.currentRBuds[0])
+        self.currentRBuds.pop(self.currentRBuds.index(self.rightModel.get()))
         self.rightOptions = OptionMenu(self.frame, self.rightModel,self.rightModel.get(), *self.currentRBuds)
         self.rightOptions.grid(column=tempColumn+2, row=tempRow)
         pass
@@ -463,11 +485,11 @@ class AirpodsLabel(CustomLabel):
                         rightStr = serials[1]
         if self.parseError == False:
             self.l = self.FillData(caseStr, self.caseModel.get())
-            self.leftL = self.FillData(leftStr, self.leftModel.get())
-            self.rightL = self.FillData(rightStr,self.rightModel.get())
+            self.leftL = self.FillData(leftStr, self.leftModel.get(), isBud=True)
+            self.rightL = self.FillData(rightStr, self.rightModel.get(), isBud=True)
         pass
 
-    def FillData(self, serial : str, model : str) -> zpl.Label:
+    def FillData(self, serial : str, model : str, isBud : bool = False) -> zpl.Label:
         label = zpl.Label(self.height,self.width, 11.8)
         label.origin(1,4)
         
@@ -482,9 +504,14 @@ class AirpodsLabel(CustomLabel):
         label.barcode('C', serial, height=60, mode='A')
         label.endorigin()
 
-        label.origin(4,21)
-        label.write_text("PO: " + self.po.get(), char_height=3, char_width=3, line_width=30, justification='L')
-        label.endorigin()
+        if isBud and self.scpoBuds.get():
+            label.origin(4,21)
+            label.write_text("PO: SCPO", char_height=3, char_width=3, line_width=30, justification='L')
+            label.endorigin()
+        else:
+            label.origin(4,21)
+            label.write_text("PO: " + self.po.get(), char_height=3, char_width=3, line_width=30, justification='L')
+            label.endorigin()
 
         label.origin(37,21)
         label.write_text(self.initials.get().upper(), char_height=4, char_width=4, line_width=30, justification='L')
@@ -516,8 +543,14 @@ class AirpodsLabel(CustomLabel):
             self.prevAllSN.set(self.allSN.get())
             self.allSN.set("")
             self.allSNEntry.focus_set()
-    
+
     def GetPrintData(self, setData = True):
+        if self.printEngravedQueued:
+            self.printEngravedQueued = False
+            return self.engravedZPL
+        elif self.printMismatchedQueued:
+            self.printMismatchedQueued = False
+            return self.mismatchedZPL
         super()
         if setData:
             self.SetLabelData()
@@ -591,6 +624,8 @@ class AirpodsLabel(CustomLabel):
                 self.prevAllSN.set(loadDict["prevAllSerial"])
             if "allFormat" in keys:
                 self.allFormat.set(loadDict["allFormat"])
+            if "scpoBuds" in keys:
+                self.scpoBuds.set(loadDict["scpoBuds"])
         
         self.CaseModelChanged(self.caseModel.get())
         if self.printType.get() == "Complete":
@@ -621,4 +656,5 @@ class AirpodsLabel(CustomLabel):
         saveDict["allSerial"] = self.allSN.get()
         saveDict["prevAllSerial"] = self.prevAllSN.get()
         saveDict["allFormat"] = self.allFormat.get()
+        saveDict["scpoBuds"] = self.scpoBuds.get()
         return saveDict
