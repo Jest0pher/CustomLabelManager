@@ -1,0 +1,3202 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ZPL2PDF</name>
+    </assembly>
+    <members>
+        <member name="T:ZPL2PDF.Application.Interfaces.IConversionService">
+            <summary>
+            Interface for ZPL to PDF conversion service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IConversionService.ConvertWithExplicitDimensions(System.String,System.Double,System.Double,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}},ZPL2PDF.Shared.Constants.RendererEngine)">
+            <summary>
+            Converts ZPL content to PDF using explicit dimensions
+            </summary>
+            <param name="zplContent">ZPL content to convert</param>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density in DPI</param>
+            <param name="fontsDirectory">Optional directory for TTF/OTF fonts (--fonts-dir)</param>
+            <param name="fontMappings">Optional font ID to path mappings (--font "A=path.ttf")</param>
+            <returns>List of image data for PDF generation</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IConversionService.ConvertWithExtractedDimensions(System.String,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}},ZPL2PDF.Shared.Constants.RendererEngine)">
+            <summary>
+            Converts ZPL content to PDF by extracting dimensions from ZPL
+            </summary>
+            <param name="zplContent">ZPL content to convert</param>
+            <param name="unit">Unit of measurement for extracted dimensions</param>
+            <param name="dpi">Print density in DPI</param>
+            <param name="fontsDirectory">Optional directory for TTF/OTF fonts</param>
+            <param name="fontMappings">Optional font ID to path mappings</param>
+            <returns>List of image data for PDF generation</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IConversionService.Convert(System.String,System.Double,System.Double,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}},ZPL2PDF.Shared.Constants.RendererEngine)">
+            <summary>
+            Converts ZPL content to PDF using mixed approach (explicit or extracted)
+            </summary>
+            <param name="zplContent">ZPL content to convert</param>
+            <param name="explicitWidth">Explicit width (0 to extract from ZPL)</param>
+            <param name="explicitHeight">Explicit height (0 to extract from ZPL)</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density in DPI</param>
+            <param name="fontsDirectory">Optional directory for TTF/OTF fonts</param>
+            <param name="fontMappings">Optional font ID to path mappings</param>
+            <returns>List of image data for PDF generation</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IConversionService.ConvertPdfDirectWithLabelary(System.String,System.Double,System.Double,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}})">
+            <summary>
+            Converts the entire ZPL template directly to a PDF using the Labelary API.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IConversionService.TryConvertPdfDirectWithLabelary(System.String,System.Double,System.Double,System.String,System.Int32,ZPL2PDF.Shared.Constants.RendererEngine,System.Byte[]@,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}})">
+            <summary>
+            Tries direct PDF conversion via Labelary according to renderer policy.
+            Returns false when direct mode is not enabled or when auto mode falls back.
+            Throws when renderer is Labelary and direct conversion fails.
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Application.Interfaces.IDaemonService">
+            <summary>
+            Interface for daemon service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IDaemonService.Start(System.String,System.Double,System.Double,System.String,System.Int32)">
+            <summary>
+            Starts the daemon
+            </summary>
+            <param name="listenFolder">Folder to monitor</param>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density</param>
+            <returns>True if started successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IDaemonService.Stop">
+            <summary>
+            Stops the daemon
+            </summary>
+            <returns>True if stopped successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IDaemonService.Status">
+            <summary>
+            Gets the daemon status
+            </summary>
+            <returns>True if running, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IDaemonService.IsRunning">
+            <summary>
+            Checks if the daemon is running
+            </summary>
+            <returns>True if running, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IDaemonService.RunAsync(System.String,System.Double,System.Double,System.String,System.Int32)">
+            <summary>
+            Runs daemon mode in the current process
+            </summary>
+            <param name="listenFolder">Folder to monitor</param>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density</param>
+            <returns>Task representing the daemon operation</returns>
+        </member>
+        <member name="T:ZPL2PDF.Application.Interfaces.IFileProcessingService">
+            <summary>
+            Interface for file processing service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileProcessingService.ProcessFileAsync(System.String,System.Double,System.Double,System.String,System.Int32)">
+            <summary>
+            Processes a file for conversion
+            </summary>
+            <param name="filePath">Path to the file to process</param>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density</param>
+            <returns>True if processed successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileProcessingService.AddFile(System.String)">
+            <summary>
+            Adds a file to the processing queue
+            </summary>
+            <param name="filePath">Path to the file to add</param>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileProcessingService.StartProcessing">
+            <summary>
+            Starts the processing queue
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileProcessingService.StopProcessing">
+            <summary>
+            Stops the processing queue
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileProcessingService.GetQueueStatus">
+            <summary>
+            Gets the current queue status
+            </summary>
+            <returns>Queue status information</returns>
+        </member>
+        <member name="T:ZPL2PDF.Application.Interfaces.QueueStatus">
+            <summary>
+            Represents queue status information
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Application.Interfaces.IFileValidationService">
+            <summary>
+            Interface for file validation service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileValidationService.IsValidFile(System.String)">
+            <summary>
+            Checks if the file is valid for processing
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileValidationService.IsFileLocked(System.String)">
+            <summary>
+            Checks if the file is being used by another process
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <returns>True if locked, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IFileValidationService.IsValidExtension(System.String)">
+            <summary>
+            Validates file extension
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <returns>True if extension is valid, False otherwise</returns>
+        </member>
+        <member name="T:ZPL2PDF.Application.Interfaces.IPathService">
+            <summary>
+            Interface for path management service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IPathService.EnsureDirectoryExists(System.String)">
+            <summary>
+            Ensures directory exists, creating it if necessary
+            </summary>
+            <param name="directoryPath">Path to the directory</param>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IPathService.GetDefaultListenFolder">
+            <summary>
+            Gets the default monitoring folder based on OS
+            </summary>
+            <returns>Default folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IPathService.GetConfigFolder">
+            <summary>
+            Gets the configuration folder based on OS
+            </summary>
+            <returns>Configuration folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IPathService.GetPidFolder">
+            <summary>
+            Gets the PID folder based on OS
+            </summary>
+            <returns>PID folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IPathService.Combine(System.String,System.String)">
+            <summary>
+            Combines paths safely
+            </summary>
+            <param name="path1">First path</param>
+            <param name="path2">Second path</param>
+            <returns>Combined path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IPathService.GetDirectoryName(System.String)">
+            <summary>
+            Gets directory name from path
+            </summary>
+            <param name="path">File or directory path</param>
+            <returns>Directory name</returns>
+        </member>
+        <member name="T:ZPL2PDF.Application.Interfaces.IUnitConversionService">
+            <summary>
+            Interface for unit conversion service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IUnitConversionService.ConvertUnit(System.Double,System.String,System.String)">
+            <summary>
+            Converts dimensions from one unit to another
+            </summary>
+            <param name="value">Value to convert</param>
+            <param name="fromUnit">Source unit</param>
+            <param name="toUnit">Target unit</param>
+            <returns>Converted value</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IUnitConversionService.ConvertMmToPoints(System.Double,System.Int32)">
+            <summary>
+            Converts millimeters to points
+            </summary>
+            <param name="mm">Value in millimeters</param>
+            <param name="dpi">Printer DPI</param>
+            <returns>Value in points</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IUnitConversionService.ConvertPointsToMm(System.Int32,System.Int32)">
+            <summary>
+            Converts points to millimeters
+            </summary>
+            <param name="points">Value in points</param>
+            <param name="dpi">Printer DPI</param>
+            <returns>Value in millimeters</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Interfaces.IUnitConversionService.ConvertToMillimeters(System.Double,System.Double,System.String)">
+            <summary>
+            Converts width and height to millimeters based on unit
+            </summary>
+            <param name="width">Width value</param>
+            <param name="height">Height value</param>
+            <param name="unit">Unit of measurement</param>
+            <returns>Tuple with width and height in millimeters</returns>
+        </member>
+        <member name="T:ZPL2PDF.Application.Services.ConversionService">
+            <summary>
+            Service responsible for converting ZPL content to PDF images.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.ConversionService.#ctor">
+            <summary>
+            Initializes a new instance of the ConversionService.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.ConversionService.PrepareLabels(System.String)">
+            <summary>
+            Preprocesses and splits ZPL content into individual labels.
+            </summary>
+            <param name="zplContent">Raw ZPL content.</param>
+            <returns>List of preprocessed labels, or empty list if no valid labels found.</returns>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.ConversionService.ConvertWithExplicitDimensions(System.String,System.Double,System.Double,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}},ZPL2PDF.Shared.Constants.RendererEngine)">
+            <summary>
+            Converts ZPL content to PDF using explicit dimensions.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.ConversionService.ConvertWithExtractedDimensions(System.String,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}},ZPL2PDF.Shared.Constants.RendererEngine)">
+            <summary>
+            Converts ZPL content to PDF by extracting dimensions from ZPL.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.ConversionService.Convert(System.String,System.Double,System.Double,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}},ZPL2PDF.Shared.Constants.RendererEngine)">
+            <summary>
+            Converts ZPL content to PDF using mixed approach (explicit or extracted)
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.ConversionService.ConvertPdfDirectWithLabelary(System.String,System.Double,System.Double,System.String,System.Int32,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}})">
+            <summary>
+            Converts the entire ZPL template directly to a PDF using the Labelary API
+            (Labelary returns <c>application/pdf</c> when requested via Accept header).
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Application.Services.FileValidationService">
+            <summary>
+            Service responsible for file validation
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Application.Services.FileValidationService.ValidExtensions">
+            <summary>
+            Valid file extensions for ZPL processing
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.FileValidationService.IsValidFile(System.String)">
+            <summary>
+            Checks if the file is valid for processing
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.FileValidationService.IsFileLocked(System.String)">
+            <summary>
+            Checks if the file is being used by another process
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.FileValidationService.IsValidExtension(System.String)">
+            <summary>
+            Validates file extension
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Application.Services.PathService">
+            <summary>
+            Service responsible for path management
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.PathService.EnsureDirectoryExists(System.String)">
+            <summary>
+            Ensures directory exists, creating it if necessary
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.PathService.GetDefaultListenFolder">
+            <summary>
+            Gets the default monitoring folder based on OS
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.PathService.GetConfigFolder">
+            <summary>
+            Gets the configuration folder based on OS
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.PathService.GetPidFolder">
+            <summary>
+            Gets the PID folder based on OS
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.PathService.Combine(System.String,System.String)">
+            <summary>
+            Combines paths safely
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.PathService.GetDirectoryName(System.String)">
+            <summary>
+            Gets directory name from path
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Application.Services.UnitConversionService">
+            <summary>
+            Service responsible for unit conversions
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.UnitConversionService.ConvertUnit(System.Double,System.String,System.String)">
+            <summary>
+            Converts dimensions from one unit to another
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.UnitConversionService.ConvertMmToPoints(System.Double,System.Int32)">
+            <summary>
+            Converts millimeters to points
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.UnitConversionService.ConvertPointsToMm(System.Int32,System.Int32)">
+            <summary>
+            Converts points to millimeters
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Application.Services.UnitConversionService.ConvertToMillimeters(System.Double,System.Double,System.String)">
+            <summary>
+            Converts width and height to millimeters based on unit
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Domain.Services.IDimensionExtractor">
+            <summary>
+            Interface for ZPL dimension extraction service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IDimensionExtractor.ExtractDimensions(System.String)">
+            <summary>
+            Extracts dimensions from ZPL content
+            </summary>
+            <param name="zplContent">ZPL content to analyze</param>
+            <returns>List of extracted dimensions for each label</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IDimensionExtractor.ExtractDimensionsFromLabel(System.String)">
+            <summary>
+            Extracts dimensions from a single ZPL label
+            </summary>
+            <param name="zplLabel">Single ZPL label string</param>
+            <returns>Extracted dimensions or null if not found</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IDimensionExtractor.ApplyPriorityLogic(System.Nullable{System.Double},System.Nullable{System.Double},System.String,ZPL2PDF.LabelDimensions,System.Int32)">
+            <summary>
+            Applies priority logic to determine final dimensions
+            </summary>
+            <param name="explicitWidth">Explicit width value</param>
+            <param name="explicitHeight">Explicit height value</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="extractedDimensions">Extracted dimensions from ZPL</param>
+            <param name="dpi">DPI to use for conversions</param>
+            <returns>Final dimensions to use</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IDimensionExtractor.ConvertPointsToMm(System.Int32,System.Int32)">
+            <summary>
+            Converts points to millimeters
+            </summary>
+            <param name="points">Value in points</param>
+            <param name="dpi">Print density in DPI</param>
+            <returns>Value in millimeters</returns>
+        </member>
+        <member name="T:ZPL2PDF.Domain.Services.IFileValidator">
+            <summary>
+            Interface for file validation service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IFileValidator.IsValidFile(System.String)">
+            <summary>
+            Validates if a file is valid for processing
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IFileValidator.IsFileLocked(System.String)">
+            <summary>
+            Validates if a file is locked by another process
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <returns>True if locked, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IFileValidator.IsValidExtension(System.String)">
+            <summary>
+            Validates file extension
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <returns>True if extension is valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IFileValidator.GetValidExtensions">
+            <summary>
+            Gets the list of valid file extensions
+            </summary>
+            <returns>Array of valid extensions</returns>
+        </member>
+        <member name="T:ZPL2PDF.Domain.Services.ILabelRenderer">
+            <summary>
+            Interface for label rendering service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.ILabelRenderer.RenderLabels(System.Collections.Generic.List{System.String})">
+            <summary>
+            Renders ZPL labels to image data
+            </summary>
+            <param name="labels">List of ZPL label strings</param>
+            <returns>List of image data as byte arrays</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.ILabelRenderer.GetDimensions">
+            <summary>
+            Gets the current label dimensions
+            </summary>
+            <returns>Label dimensions</returns>
+        </member>
+        <member name="T:ZPL2PDF.Domain.Services.IPdfGenerator">
+            <summary>
+            Interface for PDF generation service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IPdfGenerator.GeneratePdf(System.Collections.Generic.List{System.Byte[]},System.String)">
+            <summary>
+            Generates a PDF file from image data
+            </summary>
+            <param name="imageDataList">List of image data as byte arrays</param>
+            <param name="outputPath">Output file path for the PDF</param>
+        </member>
+        <member name="M:ZPL2PDF.Domain.Services.IPdfGenerator.GeneratePdf(System.Collections.Generic.List{System.Byte[]},System.String,System.Double,System.Double)">
+            <summary>
+            Generates a PDF file from image data with custom settings
+            </summary>
+            <param name="imageDataList">List of image data as byte arrays</param>
+            <param name="outputPath">Output file path for the PDF</param>
+            <param name="pageWidth">Page width in points</param>
+            <param name="pageHeight">Page height in points</param>
+        </member>
+        <member name="T:ZPL2PDF.Domain.ValueObjects.ConversionOptions">
+            <summary>
+            Represents conversion options for ZPL to PDF conversion
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.Width">
+            <summary>
+            Gets or sets the label width
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.Height">
+            <summary>
+            Gets or sets the label height
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.Unit">
+            <summary>
+            Gets or sets the unit of measurement
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.Dpi">
+            <summary>
+            Gets or sets the print density in DPI
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.OutputFileName">
+            <summary>
+            Gets or sets the output file name
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.OutputFolderPath">
+            <summary>
+            Gets or sets the output folder path
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.UseExplicitDimensions">
+            <summary>
+            Gets or sets whether to use explicit dimensions
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ConversionOptions.ExtractDimensionsFromZpl">
+            <summary>
+            Gets or sets whether to extract dimensions from ZPL
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ConversionOptions.#ctor">
+            <summary>
+            Initializes a new instance of ConversionOptions
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ConversionOptions.#ctor(System.Double,System.Double,System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of ConversionOptions with explicit dimensions
+            </summary>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density</param>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ConversionOptions.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of ConversionOptions for ZPL extraction
+            </summary>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density</param>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ConversionOptions.IsValid">
+            <summary>
+            Validates the conversion options
+            </summary>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ConversionOptions.GetValidationError">
+            <summary>
+            Gets validation error message
+            </summary>
+            <returns>Error message if invalid, empty string if valid</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ConversionOptions.Clone">
+            <summary>
+            Creates a copy of the conversion options
+            </summary>
+            <returns>New instance with same values</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ConversionOptions.ToString">
+            <summary>
+            Returns a string representation of the conversion options
+            </summary>
+            <returns>String representation</returns>
+        </member>
+        <member name="T:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration">
+            <summary>
+            Represents daemon configuration
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.ListenFolderPath">
+            <summary>
+            Gets or sets the listen folder path
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.Width">
+            <summary>
+            Gets or sets the label width
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.Height">
+            <summary>
+            Gets or sets the label height
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.Unit">
+            <summary>
+            Gets or sets the unit of measurement
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.Dpi">
+            <summary>
+            Gets or sets the print density in DPI
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.UseFixedDimensions">
+            <summary>
+            Gets or sets whether to use fixed dimensions
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.RetryDelayMs">
+            <summary>
+            Gets or sets the retry delay in milliseconds
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.MaxRetries">
+            <summary>
+            Gets or sets the maximum number of retries
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.LogLevel">
+            <summary>
+            Gets or sets the log level
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.IncludeSubdirectories">
+            <summary>
+            Gets or sets whether to include subdirectories
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.FileFilter">
+            <summary>
+            Gets or sets the file filter pattern
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.Language">
+            <summary>
+            Gets or sets the language/culture code (e.g., "pt-BR", "en-US", "es-ES")
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.#ctor">
+            <summary>
+            Initializes a new instance of DaemonConfiguration
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.#ctor(System.String,System.Double,System.Double,System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of DaemonConfiguration with values
+            </summary>
+            <param name="listenFolderPath">Listen folder path</param>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density</param>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.IsValid">
+            <summary>
+            Validates the daemon configuration
+            </summary>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.GetValidationError">
+            <summary>
+            Gets validation error message
+            </summary>
+            <returns>Error message if invalid, empty string if valid</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.Clone">
+            <summary>
+            Creates a copy of the daemon configuration
+            </summary>
+            <returns>New instance with same values</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.DaemonConfiguration.ToString">
+            <summary>
+            Returns a string representation of the daemon configuration
+            </summary>
+            <returns>String representation</returns>
+        </member>
+        <member name="T:ZPL2PDF.Domain.ValueObjects.FileInfo">
+            <summary>
+            Represents file information for processing
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.FilePath">
+            <summary>
+            Gets or sets the file path
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.FileName">
+            <summary>
+            Gets or sets the file name
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.Extension">
+            <summary>
+            Gets or sets the file extension
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.Size">
+            <summary>
+            Gets or sets the file size in bytes
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.CreatedTime">
+            <summary>
+            Gets or sets the file creation time
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.LastModifiedTime">
+            <summary>
+            Gets or sets the file last modified time
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.Exists">
+            <summary>
+            Gets or sets whether the file exists
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.IsLocked">
+            <summary>
+            Gets or sets whether the file is locked
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.FileInfo.Content">
+            <summary>
+            Gets or sets the file content
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.#ctor">
+            <summary>
+            Initializes a new instance of FileInfo
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of FileInfo from file path
+            </summary>
+            <param name="filePath">Path to the file</param>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.FromPath(System.String,System.String)">
+            <summary>
+            Creates FileInfo from file path with content
+            </summary>
+            <param name="filePath">Path to the file</param>
+            <param name="content">File content</param>
+            <returns>FileInfo instance</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.FromContent(System.String,System.String)">
+            <summary>
+            Creates FileInfo from content only
+            </summary>
+            <param name="fileName">File name</param>
+            <param name="content">File content</param>
+            <returns>FileInfo instance</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.IsValid">
+            <summary>
+            Validates the file information
+            </summary>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.IsValidExtension">
+            <summary>
+            Checks if the file extension is valid for ZPL processing
+            </summary>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.GetValidationError">
+            <summary>
+            Gets validation error message
+            </summary>
+            <returns>Error message if invalid, empty string if valid</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.Clone">
+            <summary>
+            Creates a copy of the file info
+            </summary>
+            <returns>New instance with same values</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.FileInfo.ToString">
+            <summary>
+            Returns a string representation of the file info
+            </summary>
+            <returns>String representation</returns>
+        </member>
+        <member name="T:ZPL2PDF.Domain.ValueObjects.ProcessingResult">
+            <summary>
+            Represents the result of a processing operation
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.IsSuccess">
+            <summary>
+            Gets or sets whether the processing was successful
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.ErrorMessage">
+            <summary>
+            Gets or sets the error message if processing failed
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.OutputFilePath">
+            <summary>
+            Gets or sets the output file path
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.ImagesProcessed">
+            <summary>
+            Gets or sets the number of images processed
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.ProcessingDuration">
+            <summary>
+            Gets or sets the processing duration
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.StartTime">
+            <summary>
+            Gets or sets the processing start time
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.EndTime">
+            <summary>
+            Gets or sets the processing end time
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Domain.ValueObjects.ProcessingResult.Metadata">
+            <summary>
+            Gets or sets additional metadata
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.#ctor">
+            <summary>
+            Initializes a new instance of ProcessingResult
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.Success(System.String,System.Int32,System.DateTime,System.DateTime)">
+            <summary>
+            Creates a successful processing result
+            </summary>
+            <param name="outputFilePath">Output file path</param>
+            <param name="imagesProcessed">Number of images processed</param>
+            <param name="startTime">Processing start time</param>
+            <param name="endTime">Processing end time</param>
+            <returns>Successful ProcessingResult</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.Failure(System.String,System.DateTime,System.DateTime)">
+            <summary>
+            Creates a failed processing result
+            </summary>
+            <param name="errorMessage">Error message</param>
+            <param name="startTime">Processing start time</param>
+            <param name="endTime">Processing end time</param>
+            <returns>Failed ProcessingResult</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.Failure(System.Exception,System.DateTime,System.DateTime)">
+            <summary>
+            Creates a failed processing result with exception
+            </summary>
+            <param name="exception">Exception that occurred</param>
+            <param name="startTime">Processing start time</param>
+            <param name="endTime">Processing end time</param>
+            <returns>Failed ProcessingResult</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.AddMetadata(System.String,System.Object)">
+            <summary>
+            Adds metadata to the result
+            </summary>
+            <param name="key">Metadata key</param>
+            <param name="value">Metadata value</param>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.GetMetadata(System.String)">
+            <summary>
+            Gets metadata value
+            </summary>
+            <param name="key">Metadata key</param>
+            <returns>Metadata value or null if not found</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.GetMetadataString(System.String,System.String)">
+            <summary>
+            Gets metadata value as string
+            </summary>
+            <param name="key">Metadata key</param>
+            <param name="defaultValue">Default value if not found</param>
+            <returns>Metadata value as string</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.GetMetadataInt(System.String,System.Int32)">
+            <summary>
+            Gets metadata value as integer
+            </summary>
+            <param name="key">Metadata key</param>
+            <param name="defaultValue">Default value if not found</param>
+            <returns>Metadata value as integer</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.Clone">
+            <summary>
+            Creates a copy of the processing result
+            </summary>
+            <returns>New instance with same values</returns>
+        </member>
+        <member name="M:ZPL2PDF.Domain.ValueObjects.ProcessingResult.ToString">
+            <summary>
+            Returns a string representation of the processing result
+            </summary>
+            <returns>String representation</returns>
+        </member>
+        <member name="T:ZPL2PDF.ConfigManager">
+            <summary>
+            Manages ZPL2PDF configurations, including configuration file and default folders
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ConfigManager.Config">
+            <summary>
+            Gets the current configuration
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.#ctor">
+            <summary>
+            ConfigManager constructor
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.GetDefaultListenFolder">
+            <summary>
+            Gets the default monitoring folder based on OS
+            </summary>
+            <returns>Default folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.GetConfigFolder">
+            <summary>
+            Gets the configuration folder based on OS
+            </summary>
+            <returns>Configuration folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.GetPidFolder">
+            <summary>
+            Gets the PID folder based on OS
+            </summary>
+            <returns>PID folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.GetConfig">
+            <summary>
+            Gets the current configuration
+            </summary>
+            <returns>ZPL2PDF configuration</returns>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.UpdateConfig(ZPL2PDF.Zpl2PdfConfig)">
+            <summary>
+            Updates the configuration
+            </summary>
+            <param name="config">New configuration</param>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.LoadConfig">
+            <summary>
+            Loads configuration from file
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.SaveConfig">
+            <summary>
+            Saves configuration to file
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.CreateDefaultConfig">
+            <summary>
+            Creates default configuration
+            </summary>
+            <returns>Default configuration</returns>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.EnsureFoldersExist">
+            <summary>
+            Creates necessary folders if they don't exist
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.ValidateConfig">
+            <summary>
+            Validates current configuration
+            </summary>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.ConfigManager.ShowConfig">
+            <summary>
+            Displays current configuration
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Zpl2PdfConfig">
+            <summary>
+            ZPL2PDF configuration class
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.DefaultListenFolder">
+            <summary>
+            Default monitoring folder
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.LabelWidth">
+            <summary>
+            Default label width
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.LabelHeight">
+            <summary>
+            Default label height
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.Unit">
+            <summary>
+            Unit of measurement (mm, cm, in, pt)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.Dpi">
+            <summary>
+            Default DPI
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.LogLevel">
+            <summary>
+            Log level (Debug, Info, Warning, Error)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.RetryDelay">
+            <summary>
+            Delay between retry attempts (ms)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.MaxRetries">
+            <summary>
+            Maximum number of attempts
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.AutoStart">
+            <summary>
+            Start automatically with the system
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Zpl2PdfConfig.Language">
+            <summary>
+            Language/culture code (e.g., "pt-BR", "en-US", "es-ES")
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.DaemonInfo">
+            <summary>
+            Represents daemon configuration and status information
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonInfo.ListenFolder">
+            <summary>
+            Gets or sets the listen folder path
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonInfo.LabelWidth">
+            <summary>
+            Gets or sets the label width
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonInfo.LabelHeight">
+            <summary>
+            Gets or sets the label height
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonInfo.Unit">
+            <summary>
+            Gets or sets the unit of measurement
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonInfo.PrintDensity">
+            <summary>
+            Gets or sets the print density (DPI)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonInfo.StartTime">
+            <summary>
+            Gets or sets the start time
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonInfo.ProcessId">
+            <summary>
+            Gets or sets the process ID
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.DaemonManager">
+            <summary>
+            Manages the ZPL2PDF daemon, including start/stop/status and PID control
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            DaemonManager constructor
+            </summary>
+            <param name="listenFolder">Folder to monitor</param>
+            <param name="labelWidth">Label width</param>
+            <param name="labelHeight">Label height</param>
+            <param name="unit">Unit of measurement (mm, in, pt)</param>
+            <param name="printDensity">Print density (DPI)</param>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.Start">
+            <summary>
+            Starts the daemon
+            </summary>
+            <returns>True if started successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.Stop">
+            <summary>
+            Stops the daemon
+            </summary>
+            <returns>True if stopped successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.Status">
+            <summary>
+            Gets the daemon status
+            </summary>
+            <returns>True if running, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.IsRunning">
+            <summary>
+            Checks if the daemon is running
+            </summary>
+            <returns>True if running, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.BuildDaemonArguments">
+            <summary>
+            Builds daemon arguments string
+            </summary>
+            <returns>Arguments string</returns>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.SaveDaemonInfoToFile(System.Int32)">
+            <summary>
+            Saves daemon info to file
+            </summary>
+            <param name="pid">Process ID</param>
+        </member>
+        <member name="M:ZPL2PDF.DaemonManager.GetDaemonInfoFromFile">
+            <summary>
+            Gets daemon info from file
+            </summary>
+            <returns>Daemon info or null if not found</returns>
+        </member>
+        <member name="T:ZPL2PDF.FolderMonitor">
+            <summary>
+            Monitors a folder to detect ZPL text files and adds them to the processing queue.
+            </summary>
+        </member>
+        <member name="E:ZPL2PDF.FolderMonitor.FileDetected">
+            <summary>
+            Event fired when a file is detected
+            </summary>
+        </member>
+        <member name="E:ZPL2PDF.FolderMonitor.ErrorOccurred">
+            <summary>
+            Event fired when an error occurs in monitoring
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.#ctor(System.String,ZPL2PDF.ProcessingQueue,ZPL2PDF.ZplDimensionExtractor,ZPL2PDF.ConfigManager,ZPL2PDF.LabelDimensions,System.Boolean)">
+            <summary>
+            FolderMonitor constructor
+            </summary>
+            <param name="listenFolder">Folder to monitor</param>
+            <param name="processingQueue">Processing queue</param>
+            <param name="dimensionExtractor">ZPL dimension extractor</param>
+            <param name="configManager">Configuration manager</param>
+            <param name="fixedDimensions">Fixed dimensions (if applicable)</param>
+            <param name="useFixedDimensions">Whether to use fixed dimensions for all files</param>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.StartWatching">
+            <summary>
+            Starts folder monitoring
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.StopWatching">
+            <summary>
+            Stops folder monitoring
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.OnFileCreated(System.Object,System.IO.FileSystemEventArgs)">
+            <summary>
+            Event fired when a file is created
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.OnError(System.Object,System.IO.ErrorEventArgs)">
+            <summary>
+            Event fired when an error occurs
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.OnFileCompleted(System.Object,ZPL2PDF.FileCompletedEventArgs)">
+            <summary>
+            Event fired when a file processing is completed
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.HandleFileEvent(System.String,System.String)">
+            <summary>
+            Handles file events (created/modified)
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.ProcessFileAsync(System.String,System.String)">
+            <summary>
+            Processes an individual file
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.IsValidFile(System.String)">
+            <summary>
+            Checks if the file is valid for processing
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.IsFileLocked(System.String)">
+            <summary>
+            Checks if the file is being used by another process
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.ProcessExistingFiles">
+            <summary>
+            Processes existing files in the monitored folder
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.PollForNewFiles(System.Object)">
+            <summary>
+            Polls for new files as backup for FileSystemWatcher
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.ClearProcessingFiles">
+            <summary>
+            Clears the list of processing files (useful for testing or restarting)
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.FolderMonitor.Dispose">
+            <summary>
+            Releases resources
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.FileDetectedEventArgs">
+            <summary>
+            Arguments for the file detected event
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.ProcessingItem">
+            <summary>
+            Processing item in the queue
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Infrastructure.Interfaces.IConfigManager">
+            <summary>
+            Interface for configuration management service
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.LoadConfig">
+            <summary>
+            Loads configuration from file
+            </summary>
+            <returns>True if loaded successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.SaveConfig">
+            <summary>
+            Saves configuration to file
+            </summary>
+            <returns>True if saved successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.GetDefaultWatchFolder">
+            <summary>
+            Gets the default watch folder path
+            </summary>
+            <returns>Default watch folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.GetValue(System.String)">
+            <summary>
+            Gets a configuration value
+            </summary>
+            <param name="key">Configuration key</param>
+            <returns>Configuration value or default</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.SetValue(System.String,System.String)">
+            <summary>
+            Sets a configuration value
+            </summary>
+            <param name="key">Configuration key</param>
+            <param name="value">Configuration value</param>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.GetIntValue(System.String,System.Int32)">
+            <summary>
+            Gets a configuration value as integer
+            </summary>
+            <param name="key">Configuration key</param>
+            <param name="defaultValue">Default value if not found</param>
+            <returns>Configuration value as integer</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.GetDoubleValue(System.String,System.Double)">
+            <summary>
+            Gets a configuration value as double
+            </summary>
+            <param name="key">Configuration key</param>
+            <param name="defaultValue">Default value if not found</param>
+            <returns>Configuration value as double</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IConfigManager.GetBoolValue(System.String,System.Boolean)">
+            <summary>
+            Gets a configuration value as boolean
+            </summary>
+            <param name="key">Configuration key</param>
+            <param name="defaultValue">Default value if not found</param>
+            <returns>Configuration value as boolean</returns>
+        </member>
+        <member name="T:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher">
+            <summary>
+            Interface for file system watching service
+            </summary>
+        </member>
+        <member name="E:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher.FileCreated">
+            <summary>
+            Event fired when a file is created
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher.Path">
+            <summary>
+            Gets or sets the path to watch
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher.Filter">
+            <summary>
+            Gets or sets the filter for files to watch
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher.IncludeSubdirectories">
+            <summary>
+            Gets or sets whether to include subdirectories
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher.EnableRaisingEvents">
+            <summary>
+            Gets or sets whether the watcher is enabled
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher.StartWatching">
+            <summary>
+            Starts watching the specified path
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IFileSystemWatcher.StopWatching">
+            <summary>
+            Stops watching
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Infrastructure.Interfaces.FileCreatedEventArgs">
+            <summary>
+            Event arguments for file created events
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Infrastructure.Interfaces.IPathService">
+            <summary>
+            Interface for path management service in infrastructure layer
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.EnsureDirectoryExists(System.String)">
+            <summary>
+            Ensures directory exists, creating it if necessary
+            </summary>
+            <param name="directoryPath">Path to the directory</param>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.GetDefaultListenFolder">
+            <summary>
+            Gets the default monitoring folder based on OS
+            </summary>
+            <returns>Default folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.GetConfigFolder">
+            <summary>
+            Gets the configuration folder based on OS
+            </summary>
+            <returns>Configuration folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.GetPidFolder">
+            <summary>
+            Gets the PID folder based on OS
+            </summary>
+            <returns>PID folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.Combine(System.String,System.String)">
+            <summary>
+            Combines paths safely
+            </summary>
+            <param name="path1">First path</param>
+            <param name="path2">Second path</param>
+            <returns>Combined path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.GetDirectoryName(System.String)">
+            <summary>
+            Gets directory name from path
+            </summary>
+            <param name="path">File or directory path</param>
+            <returns>Directory name</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.Exists(System.String)">
+            <summary>
+            Checks if a path exists
+            </summary>
+            <param name="path">Path to check</param>
+            <returns>True if exists, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.GetFileName(System.String)">
+            <summary>
+            Gets the file name from a path
+            </summary>
+            <param name="path">File path</param>
+            <returns>File name</returns>
+        </member>
+        <member name="M:ZPL2PDF.Infrastructure.Interfaces.IPathService.GetExtension(System.String)">
+            <summary>
+            Gets the file extension from a path
+            </summary>
+            <param name="path">File path</param>
+            <returns>File extension</returns>
+        </member>
+        <member name="T:ZPL2PDF.PidManager">
+            <summary>
+            Manages PID file operations for daemon processes
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.PidManager.#ctor">
+            <summary>
+            Initializes a new instance of the PidManager (default PID file: zpl2pdf.pid).
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.PidManager.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the PidManager with a custom PID file name
+            (e.g. "zpl2pdf-tcp.pid" for the TCP server).
+            </summary>
+            <param name="pidFileName">PID file name (e.g. "zpl2pdf-tcp.pid").</param>
+        </member>
+        <member name="M:ZPL2PDF.PidManager.GetPidFromFile">
+            <summary>
+            Gets the PID from the PID file
+            </summary>
+            <returns>PID value or 0 if not found</returns>
+        </member>
+        <member name="M:ZPL2PDF.PidManager.SavePidToFile(System.Int32)">
+            <summary>
+            Saves the PID to the PID file
+            </summary>
+            <param name="pid">Process ID to save</param>
+            <returns>True if saved successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.PidManager.RemovePidFile">
+            <summary>
+            Removes the PID file
+            </summary>
+            <returns>True if removed successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.PidManager.PidFileExists">
+            <summary>
+            Checks if the PID file exists
+            </summary>
+            <returns>True if exists, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.PidManager.GetPidFilePath(System.String)">
+            <summary>
+            Gets the PID file path based on the operating system and file name.
+            </summary>
+            <param name="fileName">PID file name (e.g. "zpl2pdf.pid" or "zpl2pdf-tcp.pid").</param>
+            <returns>PID file path</returns>
+        </member>
+        <member name="T:ZPL2PDF.ProcessingQueue">
+            <summary>
+            Asynchronous queue for processing ZPL files
+            </summary>
+        </member>
+        <member name="E:ZPL2PDF.ProcessingQueue.FileProcessed">
+            <summary>
+            Event fired when a file is processed successfully
+            </summary>
+        </member>
+        <member name="E:ZPL2PDF.ProcessingQueue.FileError">
+            <summary>
+            Event fired when an error occurs during processing
+            </summary>
+        </member>
+        <member name="E:ZPL2PDF.ProcessingQueue.FileCompleted">
+            <summary>
+            Event fired when a file processing is completed (success or error)
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.#ctor(ZPL2PDF.ZplDimensionExtractor,ZPL2PDF.ConfigManager,System.Int32,System.String)">
+            <summary>
+            ProcessingQueue constructor
+            </summary>
+            <param name="dimensionExtractor">ZPL dimension extractor</param>
+            <param name="configManager">Configuration manager</param>
+            <param name="maxConcurrentFiles">Maximum number of files processed simultaneously</param>
+            <param name="customOutputFolder">Custom folder to save PDFs (optional)</param>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.#ctor(ZPL2PDF.ZplDimensionExtractor,ZPL2PDF.ConfigManager,System.Int32,System.String,ZPL2PDF.Shared.Constants.RendererEngine)">
+            <summary>
+            ProcessingQueue constructor (with renderer engine).
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.AddFileAsync(ZPL2PDF.ProcessingItem)">
+            <summary>
+            Adds a file to the processing queue
+            </summary>
+            <param name="item">Processing item</param>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.ProcessQueueAsync">
+            <summary>
+            Processes the queue continuously
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.ProcessFileAsync(ZPL2PDF.ProcessingItem)">
+            <summary>
+            Processes an individual file
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.ConvertFileAsync(ZPL2PDF.ProcessingItem)">
+            <summary>
+            Converts ZPL file to PDF
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.DeleteOriginalFileAsync(ZPL2PDF.ProcessingItem)">
+            <summary>
+            Deletes the original file after successful processing
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.RetryFileAsync(ZPL2PDF.ProcessingItem)">
+            <summary>
+            Tries to process the file again after a delay
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.IsFileLocked(System.String)">
+            <summary>
+            Checks if the file is being used by another process
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.GetStats">
+            <summary>
+            Gets queue statistics
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.StopAsync">
+            <summary>
+            Stops queue processing
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessingQueue.Dispose">
+            <summary>
+            Libera recursos
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.FileProcessedEventArgs">
+            <summary>
+            Arguments for the file processed event
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.FileErrorEventArgs">
+            <summary>
+            Arguments for the file error event
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.FileCompletedEventArgs">
+            <summary>
+            Arguments for the file completed event
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.QueueStats">
+            <summary>
+            Processing queue statistics
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.ProcessManager">
+            <summary>
+            Manages process operations for daemon
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessManager.#ctor">
+            <summary>
+            Initializes a new instance of the ProcessManager
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ProcessManager.StartBackgroundProcess(System.String)">
+            <summary>
+            Starts a background process with the specified arguments
+            </summary>
+            <param name="arguments">Command line arguments</param>
+            <returns>Process ID if started successfully, 0 otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.ProcessManager.KillProcess(System.Int32)">
+            <summary>
+            Kills a process by its ID
+            </summary>
+            <param name="pid">Process ID to kill</param>
+            <returns>True if killed successfully, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.ProcessManager.IsProcessRunning(System.Int32)">
+            <summary>
+            Checks if a process is running by its ID
+            </summary>
+            <param name="pid">Process ID to check</param>
+            <returns>True if running, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.ProcessManager.GetProcessInfo(System.Int32)">
+            <summary>
+            Gets process information by its ID
+            </summary>
+            <param name="pid">Process ID</param>
+            <returns>Process information or null if not found</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:ZPL2PDF.ProcessManager.GetProcessStartInfo" -->
+        <member name="T:ZPL2PDF.ProcessInfo">
+            <summary>
+            Represents process information
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.AutoRenderer">
+            <summary>
+            Renderer that tries Labelary first and falls back to BinaryKits offline rendering per label.
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.LabelaryRenderer">
+            <summary>
+            Renders ZPL labels using Labelary online API (returns PNG bytes).
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelaryRenderer.RenderPdf(System.String)">
+            <summary>
+            Renders the entire ZPL template to a PDF directly from Labelary.
+            This requests <c>application/pdf</c> and omits the label index so Labelary can include all labels.
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.LabelRenderer">
+            <summary>
+            Responsible for processing labels, generating images in memory, and returning image data.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelRenderer.CreateDrawerOptions">
+            <summary>
+            Creates DrawerOptions with high quality settings. Optional custom font loader for ^A0N, ^AAN, ^ABN, etc.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelRenderer.CreateFontLoader">
+            <summary>
+            Builds a delegate that resolves ZPL font ID (0, A, B, ...) to SKTypeface from --fonts-dir and --font mappings.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelRenderer.ResolveFontPath(System.String,System.String)">
+            <summary>
+            Resolves font path declared in --font mapping.
+            Supports absolute paths and relative paths (with or without nested folders) against --fonts-dir.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelRenderer.#ctor(System.Double,System.Double,System.Int32,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}})">
+            <summary>
+            Initializes a new instance of the LabelRenderer class, setting up the necessary dependencies for rendering labels into images.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelRenderer.#ctor(ZPL2PDF.LabelDimensions,System.String,System.Collections.Generic.IReadOnlyList{System.ValueTuple{System.String,System.String}})">
+            <summary>
+            Initializes a new instance of the LabelRenderer class using LabelDimensions (for daemon mode).
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelRenderer.RenderLabels(System.Collections.Generic.List{System.String})">
+            <summary>
+            Processes a list of ZPL labels and returns a list of images (in byte[]).
+            </summary>
+            <param name="labels">List of ZPL labels.</param>
+            <returns>List of images in byte arrays.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when labels is null.</exception>
+        </member>
+        <member name="M:ZPL2PDF.LabelRenderer.GetDimensions">
+            <inheritdoc />
+        </member>
+        <member name="T:ZPL2PDF.PdfGenerator">
+            <summary>
+            Responsible for generating a PDF, adding each image (byte[] data) to a page.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.PdfGenerator.GeneratePdf(System.Collections.Generic.List{System.Byte[]},System.String)">
+            <summary>
+            Generates a PDF with one image per page and saves the file to the specified path.
+            </summary>
+            <param name="imageDataList">List of image data in byte arrays.</param>
+            <param name="outputPdf">Path to save the generated PDF file.</param>
+        </member>
+        <member name="M:ZPL2PDF.PdfGenerator.GeneratePdfToBytes(System.Collections.Generic.List{System.Byte[]})">
+            <summary>
+            Generates a PDF with one image per page and returns it as a byte array.
+            </summary>
+            <param name="imageDataList">List of image data in byte arrays.</param>
+            <returns>PDF file as byte array.</returns>
+        </member>
+        <member name="M:ZPL2PDF.PdfGenerator.MergePdfsToBytes(System.Collections.Generic.List{System.Byte[]})">
+            <summary>
+            Merges multiple PDF documents (given as bytes) into a single PDF.
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.TcpPrinterServer">
+            <summary>
+            TCP server that accepts ZPL over the network and converts to PDF (virtual printer).
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.TcpPrinterServer.Run(System.Threading.CancellationToken)">
+            <summary>
+            Starts the TCP server and blocks until stopped.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.TcpPrinterServer.Stop">
+            <summary>
+            Stops the server (stops accepting new connections).
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Presentation.Api.Models.ConvertRequest">
+            <summary>
+            Request model for ZPL to PDF/PNG conversion API
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.Zpl">
+            <summary>
+            ZPL content to convert (required if ZplArray is not provided)
+            Can contain multiple labels separated by ^XA...^XZ
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.ZplArray">
+            <summary>
+            Array of ZPL contents to convert (required if Zpl is not provided)
+            Each element can contain one or more labels
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.Format">
+            <summary>
+            Output format: "pdf" (default) or "png"
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.Width">
+            <summary>
+            Label width (optional, will be extracted from ZPL if not provided)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.Height">
+            <summary>
+            Label height (optional, will be extracted from ZPL if not provided)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.Unit">
+            <summary>
+            Unit of measurement: "mm", "cm", or "in" (optional, default: "mm")
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.Dpi">
+            <summary>
+            Print density in DPI (optional, default: 203)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertRequest.Renderer">
+            <summary>
+            Rendering engine: "offline" (default), "labelary", or "auto"
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Presentation.Api.Models.ConvertResponse">
+            <summary>
+            Response model for ZPL conversion API
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertResponse.Success">
+            <summary>
+            Indicates if the conversion was successful
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertResponse.Format">
+            <summary>
+            Output format: "pdf" or "png"
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertResponse.Pdf">
+            <summary>
+            Base64 encoded PDF (when format is "pdf")
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertResponse.Image">
+            <summary>
+            Base64 encoded PNG image (when format is "png" and single label)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertResponse.Images">
+            <summary>
+            Base64 encoded PNG images array (when format is "png" and multiple labels)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertResponse.Pages">
+            <summary>
+            Number of pages/labels processed
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Presentation.Api.Models.ConvertResponse.Message">
+            <summary>
+            Success or error message
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.ArgumentParser">
+            <summary>
+            Responsible for parsing command line arguments
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentParser.#ctor">
+            <summary>
+            Initializes a new instance of the ArgumentParser
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentParser.ParseConversionMode(System.String[],System.Int32)">
+            <summary>
+            Parses conversion mode arguments
+            </summary>
+            <param name="args">Command line arguments</param>
+            <param name="startIndex">Starting index to parse from</param>
+            <returns>Parsed conversion arguments</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentParser.ParseDaemonMode(System.String[],System.Int32)">
+            <summary>
+            Parses daemon mode arguments
+            </summary>
+            <param name="args">Command line arguments</param>
+            <param name="startIndex">Starting index to parse from</param>
+            <returns>Parsed daemon arguments</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentParser.GetDefaultListenFolder">
+            <summary>
+            Gets the default listen folder
+            </summary>
+            <returns>Default listen folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentParser.GetDefaultTcpOutputFolder">
+            <summary>
+            Gets the default output folder for TCP server mode
+            </summary>
+            <returns>Default TCP server output folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentParser.ParseServerMode(System.String[],System.Int32)">
+            <summary>
+            Parses TCP server mode arguments (--port, -o, --foreground).
+            </summary>
+            <param name="args">Command line arguments</param>
+            <param name="startIndex">Starting index (skip "server" and subcommand)</param>
+            <returns>Parsed server arguments</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentParser.ProcessOutputFileName(System.String)">
+            <summary>
+            Processes the output file name to ensure it has .pdf extension
+            </summary>
+            <param name="fileName">Input file name</param>
+            <returns>Processed file name with .pdf extension</returns>
+        </member>
+        <member name="T:ZPL2PDF.ConversionArguments">
+            <summary>
+            Represents parsed conversion mode arguments
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ConversionArguments.StandardOutput">
+            <summary>When enabled, the conversion writes PDF bytes to stdout.</summary>
+        </member>
+        <member name="P:ZPL2PDF.ConversionArguments.RendererEngine">
+            <summary>Rendering engine selection (offline/labelary/auto).</summary>
+        </member>
+        <member name="P:ZPL2PDF.ConversionArguments.FontsDirectory">
+            <summary>Directory containing TTF/OTF fonts (e.g. for --fonts-dir).</summary>
+        </member>
+        <member name="P:ZPL2PDF.ConversionArguments.FontMappings">
+            <summary>Font ID to file path (e.g. A=arial.ttf, B=another.ttf).</summary>
+        </member>
+        <member name="T:ZPL2PDF.DaemonArguments">
+            <summary>
+            Represents parsed daemon mode arguments
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.DaemonArguments.RendererEngine">
+            <summary>Rendering engine selection (offline/labelary/auto).</summary>
+        </member>
+        <member name="T:ZPL2PDF.ServerArguments">
+            <summary>
+            Represents parsed TCP server mode arguments
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ServerArguments.RendererEngine">
+            <summary>Rendering engine selection (offline/labelary/auto).</summary>
+        </member>
+        <member name="T:ZPL2PDF.OperationMode">
+            <summary>
+            Operation modes for ZPL2PDF.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.OperationMode.Conversion">
+            <summary>
+            Conversion mode - converts file and exits.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.OperationMode.Daemon">
+            <summary>
+            Daemon mode - monitors folder and converts automatically.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.OperationMode.Help">
+            <summary>
+            Help mode - shows help message and exits.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.OperationMode.Server">
+            <summary>
+            TCP Server mode - virtual printer listening on a TCP port.
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.ArgumentProcessor">
+            <summary>
+            Responsible for processing command line arguments.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.#ctor">
+            <summary>
+            Initializes a new instance of the ArgumentProcessor
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.Mode">
+            <summary>
+            Gets the operation mode (conversion or daemon).
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.DaemonCommand">
+            <summary>
+            Gets the daemon command (start, stop, status).
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ListenFolderPath">
+            <summary>
+            Gets the listen folder path for daemon mode.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ServerCommand">
+            <summary>
+            Gets the TCP server subcommand (start, stop, status).
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ServerPort">
+            <summary>
+            Gets the TCP port for server mode (default 9101).
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ServerOutputFolder">
+            <summary>
+            Gets the output folder for TCP server mode.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ServerForeground">
+            <summary>
+            Gets whether TCP server runs in foreground (true) or background (false).
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.RendererEngine">
+            <summary>
+            Rendering engine selection (offline/labelary/auto).
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.InputFilePath">
+            <summary>
+            Gets or sets the input file path.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ZplContent">
+            <summary>
+            Gets or sets the ZPL content.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.OutputFolderPath">
+            <summary>
+            Gets or sets the output folder path.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.OutputFileName">
+            <summary>
+            Gets or sets the output file name.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.StandardOutput">
+            <summary>
+            Gets whether the conversion output should be written to stdout.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.ExitCode">
+            <summary>
+            Gets the intended process exit code (handled by Program.Main).
+            This class must not terminate the process inside unit tests.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.Width">
+            <summary>
+            Gets or sets the label width.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.Height">
+            <summary>
+            Gets or sets the label height.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.Unit">
+            <summary>
+            Gets or sets the unit of measurement.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.Dpi">
+            <summary>
+            Gets or sets the print density in DPI.
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.FontsDirectory">
+            <summary>
+            Gets or sets the directory containing custom TTF/OTF fonts (--fonts-dir).
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.ArgumentProcessor.FontMappings">
+            <summary>
+            Gets or sets font ID to file path mappings (--font "A=path.ttf").
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ProcessArguments(System.String[])">
+            <summary>
+            Processes the command line arguments.
+            </summary>
+            <param name="args">Array of command line arguments.</param>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ProcessConversionMode(System.String[])">
+            <summary>
+            Processes conversion mode arguments
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ProcessDaemonMode(System.String[])">
+            <summary>
+            Processes daemon mode arguments
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ProcessServerMode(System.String[])">
+            <summary>
+            Processes TCP server mode arguments
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ProcessDaemonStop">
+            <summary>
+            Processes daemon stop command
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ProcessDaemonStatus">
+            <summary>
+            Processes daemon status command
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.ApplyDefaultDimensions">
+            <summary>
+            Applies default dimensions when no arguments are provided
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentProcessor.GetDefaultDimensions(System.String)">
+            <summary>
+            Gets default dimensions based on unit
+            </summary>
+            <param name="unit">Unit of measurement</param>
+            <returns>Default dimensions</returns>
+        </member>
+        <member name="T:ZPL2PDF.ArgumentValidator">
+            <summary>
+            Responsible for validating command line arguments
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentValidator.ValidateConversionMode(System.String,System.String,System.String,System.Double,System.Double,System.String,System.Boolean)">
+            <summary>
+            Validates conversion mode arguments
+            </summary>
+            <param name="inputFilePath">Input file path</param>
+            <param name="zplContent">ZPL content</param>
+            <param name="outputFolderPath">Output folder path</param>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="standardOutput">When true, PDF is written to stdout and output folder is optional.</param>
+            <returns>Validation result with error message if invalid</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentValidator.ValidateDaemonMode(System.String,System.Double,System.Double,System.String,System.Int32)">
+            <summary>
+            Validates daemon mode arguments
+            </summary>
+            <param name="listenFolderPath">Listen folder path</param>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <param name="dpi">Print density</param>
+            <returns>Validation result with error message if invalid</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentValidator.ValidateDimensions(System.Double,System.Double,System.String)">
+            <summary>
+            Validates dimension parameters (width, height, unit)
+            </summary>
+            <param name="width">Label width</param>
+            <param name="height">Label height</param>
+            <param name="unit">Unit of measurement</param>
+            <returns>Validation result with error message if invalid</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentValidator.IsValidUnit(System.String)">
+            <summary>
+            Validates if a unit is valid
+            </summary>
+            <param name="unit">Unit to validate</param>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentValidator.IsValidDouble(System.String)">
+            <summary>
+            Validates if a double value can be parsed
+            </summary>
+            <param name="value">Value to validate</param>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentValidator.TryParseDouble(System.String,System.Double@)">
+            <summary>
+            Tries to parse a double value, accepting both dot (.) and comma (,) as decimal separators.
+            </summary>
+            <param name="value">The string value to parse</param>
+            <param name="result">The parsed double value</param>
+            <returns>True if parsing was successful</returns>
+        </member>
+        <member name="M:ZPL2PDF.ArgumentValidator.NormalizeDecimal(System.String)">
+            <summary>
+            Normalizes decimal separator to use dot (.) instead of comma (,).
+            </summary>
+            <param name="value">The string value to normalize</param>
+            <returns>The normalized string value</returns>
+        </member>
+        <member name="T:ZPL2PDF.ConversionModeHandler">
+            <summary>
+            Handles conversion mode operations
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ConversionModeHandler.#ctor">
+            <summary>
+            Initializes a new instance of the ConversionModeHandler
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ConversionModeHandler.HandleConversion(ZPL2PDF.ArgumentProcessor)">
+            <summary>
+            Handles conversion mode operations
+            </summary>
+            <param name="argumentProcessor">The argument processor with conversion configuration</param>
+        </member>
+        <member name="M:ZPL2PDF.ConversionModeHandler.ProcessImages(System.Collections.Generic.List{System.Byte[]},ZPL2PDF.ArgumentProcessor)">
+            <summary>
+            Processes the generated images and creates PDF
+            </summary>
+            <param name="imageDataList">List of image data</param>
+            <param name="argumentProcessor">Argument processor with configuration</param>
+        </member>
+        <member name="T:ZPL2PDF.DaemonModeHandler">
+            <summary>
+            Handles daemon mode operations
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.DaemonModeHandler.HandleDaemon(ZPL2PDF.ArgumentProcessor)">
+            <summary>
+            Handles daemon mode operations
+            </summary>
+            <param name="argumentProcessor">The argument processor with daemon configuration</param>
+        </member>
+        <member name="M:ZPL2PDF.DaemonModeHandler.RunDaemonMode(ZPL2PDF.ArgumentProcessor)">
+            <summary>
+            Runs daemon mode in the current process
+            </summary>
+            <param name="argumentProcessor">The argument processor with daemon configuration</param>
+        </member>
+        <member name="T:ZPL2PDF.HelpDisplay">
+            <summary>
+            Responsible for displaying help information
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.HelpDisplay.ShowHelp">
+            <summary>
+            Shows the help message
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.ModeDetector">
+            <summary>
+            Responsible for detecting the operation mode from command line arguments
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ModeDetector.DetectMode(System.String[])">
+            <summary>
+            Detects the operation mode based on command line arguments
+            </summary>
+            <param name="args">Command line arguments</param>
+            <returns>Detected operation mode</returns>
+        </member>
+        <member name="M:ZPL2PDF.ModeDetector.ExtractDaemonCommand(System.String[])">
+            <summary>
+            Extracts the daemon command from arguments
+            </summary>
+            <param name="args">Command line arguments</param>
+            <returns>Daemon command or empty string</returns>
+        </member>
+        <member name="M:ZPL2PDF.ModeDetector.ExtractServerCommand(System.String[])">
+            <summary>
+            Extracts the TCP server subcommand from arguments (start, stop, status).
+            </summary>
+            <param name="args">Command line arguments (first element should be "server")</param>
+            <returns>Server command: "start", "stop", "status", or "start" as default</returns>
+        </member>
+        <member name="T:ZPL2PDF.Program">
+            <summary>
+            Main program for converting ZPL to PDF.
+            
+            The program requires the following parameters:
+            1. Input file path: Specified with the -i parameter.
+            2. Output folder path: Specified with the -o parameter.
+            
+            The output file name can be specified using the -n parameter.
+            If not specified, the PDF file name will be "ZPL2PDF_DDMMYYYYHHMM.pdf".
+            Alternatively, the ZPL content can be provided directly using the -z parameter.
+            
+            Optional parameters:
+            -w: Width of the label.
+            -h: Height of the label.
+            -d: Print density in dots per millimeter.
+            -u: Unit of measurement for width and height ("in", "cm", "mm").
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Program.StartApiMode(System.String[])">
+            <summary>
+            Starts the API mode with Minimal API endpoints
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.TcpServerModeHandler">
+            <summary>
+            Handles TCP Server mode: start, stop, status.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.TcpServerModeHandler.HandleServer(ZPL2PDF.ArgumentProcessor)">
+            <summary>
+            Handles the server subcommand (start, stop, status).
+            </summary>
+            <param name="args">Processed arguments with ServerCommand, ServerPort, ServerOutputFolder, ServerForeground.</param>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Constants.ApplicationConstants">
+            <summary>
+            Centralized application constants
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.ApplicationConstants.ConvertDpiToDpmm(System.Int32)">
+            <summary>
+            Converts DPI to dpmm (dots per millimeter)
+            </summary>
+            <param name="dpi">DPI value</param>
+            <returns>dpmm value</returns>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Constants.DefaultConfigurations">
+            <summary>
+            Centralized default configurations for the application
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultWatchFolder">
+            <summary>
+            Gets the default watch folder path based on the operating system
+            </summary>
+            <returns>Default watch folder path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultConfigFilePath">
+            <summary>
+            Gets the default configuration file path
+            </summary>
+            <returns>Default configuration file path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultPidFilePath">
+            <summary>
+            Gets the default PID file path based on the operating system
+            </summary>
+            <returns>Default PID file path</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultZpl2PdfConfig">
+            <summary>
+            Gets the default ZPL2PDF configuration
+            </summary>
+            <returns>Default configuration object</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultDaemonConfiguration">
+            <summary>
+            Gets the default daemon configuration
+            </summary>
+            <returns>Default daemon configuration</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultConversionOptions">
+            <summary>
+            Gets the default conversion options
+            </summary>
+            <returns>Default conversion options</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultFileProcessingSettings">
+            <summary>
+            Gets the default file processing settings
+            </summary>
+            <returns>Dictionary with default file processing settings</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultLoggingSettings">
+            <summary>
+            Gets the default logging settings
+            </summary>
+            <returns>Dictionary with default logging settings</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultPerformanceSettings">
+            <summary>
+            Gets the default performance settings
+            </summary>
+            <returns>Dictionary with default performance settings</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetDefaultSecuritySettings">
+            <summary>
+            Gets the default security settings
+            </summary>
+            <returns>Dictionary with default security settings</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetValueOrDefault``1(``0,``0)">
+            <summary>
+            Gets a configuration value with fallback to default
+            </summary>
+            <typeparam name="T">Type of the configuration value</typeparam>
+            <param name="value">Current value</param>
+            <param name="defaultValue">Default value if current is null or invalid</param>
+            <returns>Value or default</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.GetSettingOrDefault``1(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,``0)">
+            <summary>
+            Gets a configuration value from dictionary with fallback
+            </summary>
+            <typeparam name="T">Type of the configuration value</typeparam>
+            <param name="settings">Settings dictionary</param>
+            <param name="key">Configuration key</param>
+            <param name="defaultValue">Default value if not found</param>
+            <returns>Value or default</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.ValidateAndClamp(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Validates a configuration value against constraints
+            </summary>
+            <param name="value">Value to validate</param>
+            <param name="minValue">Minimum allowed value</param>
+            <param name="maxValue">Maximum allowed value</param>
+            <param name="defaultValue">Default value if invalid</param>
+            <returns>Validated value</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.DefaultConfigurations.ValidateAndClamp(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Validates a configuration value against constraints
+            </summary>
+            <param name="value">Value to validate</param>
+            <param name="minValue">Minimum allowed value</param>
+            <param name="maxValue">Maximum allowed value</param>
+            <param name="defaultValue">Default value if invalid</param>
+            <returns>Validated value</returns>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Constants.Zpl2PdfConfig">
+            <summary>
+            ZPL2PDF configuration class (moved from ConfigManager for better organization)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.DefaultListenFolder">
+            <summary>
+            Default monitoring folder
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.LabelWidth">
+            <summary>
+            Default label width
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.LabelHeight">
+            <summary>
+            Default label height
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.Unit">
+            <summary>
+            Unit of measurement (mm, cm, in, pt)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.Dpi">
+            <summary>
+            Default DPI
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.LogLevel">
+            <summary>
+            Log level (Debug, Info, Warning, Error)
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.RetryDelay">
+            <summary>
+            Retry delay in milliseconds
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.MaxRetries">
+            <summary>
+            Maximum number of retries
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.AutoStart">
+            <summary>
+            Auto-start daemon on application launch
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.IncludeSubdirectories">
+            <summary>
+            Include subdirectories in monitoring
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Constants.Zpl2PdfConfig.FileFilter">
+            <summary>
+            File filter pattern
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Constants.ErrorMessages">
+            <summary>
+            Centralized error messages used throughout the application
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.ErrorMessages.Format(System.String,System.Object[])">
+            <summary>
+            Formats an error message with parameters
+            </summary>
+            <param name="message">Error message template</param>
+            <param name="args">Parameters to format</param>
+            <returns>Formatted error message</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.ErrorMessages.GetInvalidUnitError(System.String)">
+            <summary>
+            Gets a validation error for invalid units
+            </summary>
+            <param name="unit">Invalid unit</param>
+            <returns>Formatted error message</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.ErrorMessages.GetInvalidLogLevelError(System.String)">
+            <summary>
+            Gets a validation error for invalid log levels
+            </summary>
+            <param name="logLevel">Invalid log level</param>
+            <returns>Formatted error message</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.ErrorMessages.GetInvalidFileExtensionError">
+            <summary>
+            Gets a validation error for invalid file extensions
+            </summary>
+            <returns>Formatted error message</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.ErrorMessages.GetInvalidDimensionError(System.Double)">
+            <summary>
+            Gets a validation error for invalid dimensions
+            </summary>
+            <param name="value">Invalid dimension value</param>
+            <returns>Formatted error message</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.ErrorMessages.GetInvalidDpiError(System.Int32)">
+            <summary>
+            Gets a validation error for invalid DPI
+            </summary>
+            <param name="dpi">Invalid DPI value</param>
+            <returns>Formatted error message</returns>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Constants.Extensions">
+            <summary>
+            Useful extension methods for the application
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsNullOrWhiteSpace(System.String)">
+            <summary>
+            Checks if a string is null, empty, or whitespace
+            </summary>
+            <param name="value">String to check</param>
+            <returns>True if null, empty, or whitespace</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsNotNullOrWhiteSpace(System.String)">
+            <summary>
+            Checks if a string is not null, empty, or whitespace
+            </summary>
+            <param name="value">String to check</param>
+            <returns>True if not null, empty, or whitespace</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.ToDoubleOrDefault(System.String,System.Double)">
+            <summary>
+            Safely converts string to double with default value
+            </summary>
+            <param name="value">String to convert</param>
+            <param name="defaultValue">Default value if conversion fails</param>
+            <returns>Converted double or default value</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.ToIntOrDefault(System.String,System.Int32)">
+            <summary>
+            Safely converts string to int with default value
+            </summary>
+            <param name="value">String to convert</param>
+            <param name="defaultValue">Default value if conversion fails</param>
+            <returns>Converted int or default value</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsValidUnit(System.String)">
+            <summary>
+            Checks if a string is a valid unit
+            </summary>
+            <param name="value">String to check</param>
+            <returns>True if valid unit</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsValidLogLevel(System.String)">
+            <summary>
+            Checks if a string is a valid log level
+            </summary>
+            <param name="value">String to check</param>
+            <returns>True if valid log level</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsValidFileExtension(System.String)">
+            <summary>
+            Checks if a string is a valid file extension
+            </summary>
+            <param name="value">String to check</param>
+            <returns>True if valid file extension</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.Truncate(System.String,System.Int32,System.String)">
+            <summary>
+            Truncates a string to specified length
+            </summary>
+            <param name="value">String to truncate</param>
+            <param name="maxLength">Maximum length</param>
+            <param name="suffix">Suffix to add if truncated</param>
+            <returns>Truncated string</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.EnsureEndsWith(System.String,System.String)">
+            <summary>
+            Ensures a string ends with a specific character
+            </summary>
+            <param name="value">String to check</param>
+            <param name="suffix">Suffix to ensure</param>
+            <returns>String with ensured suffix</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.EnsureStartsWith(System.String,System.String)">
+            <summary>
+            Ensures a string starts with a specific character
+            </summary>
+            <param name="value">String to check</param>
+            <param name="prefix">Prefix to ensure</param>
+            <returns>String with ensured prefix</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsValidDimension(System.Double)">
+            <summary>
+            Checks if a double value is valid for dimensions
+            </summary>
+            <param name="value">Double value to check</param>
+            <returns>True if valid dimension</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.Clamp(System.Double,System.Double,System.Double)">
+            <summary>
+            Clamps a double value between min and max
+            </summary>
+            <param name="value">Value to clamp</param>
+            <param name="min">Minimum value</param>
+            <param name="max">Maximum value</param>
+            <returns>Clamped value</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.RoundTo(System.Double,System.Int32)">
+            <summary>
+            Rounds a double to specified decimal places
+            </summary>
+            <param name="value">Value to round</param>
+            <param name="decimalPlaces">Number of decimal places</param>
+            <returns>Rounded value</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsApproximatelyEqual(System.Double,System.Double,System.Double)">
+            <summary>
+            Checks if a double value is approximately equal to another
+            </summary>
+            <param name="value">First value</param>
+            <param name="other">Second value</param>
+            <param name="tolerance">Tolerance for comparison</param>
+            <returns>True if approximately equal</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsValidDpi(System.Int32)">
+            <summary>
+            Checks if an int value is valid for DPI
+            </summary>
+            <param name="value">Int value to check</param>
+            <returns>True if valid DPI</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.Clamp(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Clamps an int value between min and max
+            </summary>
+            <param name="value">Value to clamp</param>
+            <param name="min">Minimum value</param>
+            <param name="max">Maximum value</param>
+            <returns>Clamped value</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsInRange(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Checks if an int value is within range
+            </summary>
+            <param name="value">Value to check</param>
+            <param name="min">Minimum value</param>
+            <param name="max">Maximum value</param>
+            <returns>True if within range</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.HasValidExtension(System.String)">
+            <summary>
+            Checks if a file path has a valid extension
+            </summary>
+            <param name="filePath">File path to check</param>
+            <returns>True if valid extension</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.GetHumanReadableSize(System.String)">
+            <summary>
+            Gets file size in human readable format
+            </summary>
+            <param name="filePath">File path</param>
+            <returns>Human readable file size</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.GetHumanReadableSize(System.Int64)">
+            <summary>
+            Gets file size in human readable format
+            </summary>
+            <param name="bytes">File size in bytes</param>
+            <returns>Human readable file size</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.EnsureDirectoryExists(System.String)">
+            <summary>
+            Ensures directory exists
+            </summary>
+            <param name="directoryPath">Directory path</param>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsValidDirectory(System.String)">
+            <summary>
+            Checks if a path is a valid directory
+            </summary>
+            <param name="path">Path to check</param>
+            <returns>True if valid directory</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsValidFile(System.String)">
+            <summary>
+            Checks if a path is a valid file
+            </summary>
+            <param name="path">Path to check</param>
+            <returns>True if valid file</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Checks if a collection is null or empty
+            </summary>
+            <typeparam name="T">Type of collection elements</typeparam>
+            <param name="collection">Collection to check</param>
+            <returns>True if null or empty</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsNotNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Checks if a collection is not null and not empty
+            </summary>
+            <typeparam name="T">Type of collection elements</typeparam>
+            <param name="collection">Collection to check</param>
+            <returns>True if not null and not empty</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.FirstOrDefault``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            Safely gets the first element or default
+            </summary>
+            <typeparam name="T">Type of collection elements</typeparam>
+            <param name="collection">Collection to get element from</param>
+            <param name="defaultValue">Default value if empty</param>
+            <returns>First element or default</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.GetTimeAgo(System.DateTime)">
+            <summary>
+            Gets a human readable time difference
+            </summary>
+            <param name="dateTime">DateTime to compare</param>
+            <returns>Human readable time difference</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsToday(System.DateTime)">
+            <summary>
+            Checks if a DateTime is today
+            </summary>
+            <param name="dateTime">DateTime to check</param>
+            <returns>True if today</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.Extensions.IsYesterday(System.DateTime)">
+            <summary>
+            Checks if a DateTime is yesterday
+            </summary>
+            <param name="dateTime">DateTime to check</param>
+            <returns>True if yesterday</returns>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Constants.RegexPatterns">
+            <summary>
+            Centralized regex patterns used throughout the application
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ZplWidthPattern">
+            <summary>
+            Pattern to match ZPL width command: ^PW followed by digits
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ZplLengthPattern">
+            <summary>
+            Pattern to match ZPL length command: ^LL followed by digits
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ZplLabelPattern">
+            <summary>
+            Pattern to match complete ZPL labels: ^XA...^XZ
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ZplStartPattern">
+            <summary>
+            Pattern to match ZPL start command: ^XA
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ZplEndPattern">
+            <summary>
+            Pattern to match ZPL end command: ^XZ
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ValidFileExtensionPattern">
+            <summary>
+            Pattern to match valid file extensions
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.PdfFilePattern">
+            <summary>
+            Pattern to match PDF file extension
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ConfigFilePattern">
+            <summary>
+            Pattern to match configuration file extension
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.WindowsDrivePattern">
+            <summary>
+            Pattern to match Windows drive letters
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ValidFolderNamePattern">
+            <summary>
+            Pattern to match valid folder names (no invalid characters)
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ValidFileNamePattern">
+            <summary>
+            Pattern to match valid file names (no invalid characters)
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.UnitValuePattern">
+            <summary>
+            Pattern to match unit values with optional decimal places
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.DimensionPattern">
+            <summary>
+            Pattern to match dimension values (width x height)
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.PositiveNumberPattern">
+            <summary>
+            Pattern to match positive numbers (including decimals)
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.IntegerPattern">
+            <summary>
+            Pattern to match integers
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.DpiPattern">
+            <summary>
+            Pattern to match valid DPI values (72-600)
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.LogLevelPattern">
+            <summary>
+            Pattern to match log level values
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.TimestampPattern">
+            <summary>
+            Pattern to match timestamp in logs
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.ErrorMessagePattern">
+            <summary>
+            Pattern to match error messages in logs
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RegexPatterns.WarningMessagePattern">
+            <summary>
+            Pattern to match warning messages in logs
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.RegexPatterns.IsValidUnit(System.String)">
+            <summary>
+            Checks if a string matches any of the supported units
+            </summary>
+            <param name="unit">Unit string to check</param>
+            <returns>True if valid unit, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.RegexPatterns.IsValidLogLevel(System.String)">
+            <summary>
+            Checks if a string matches any of the supported log levels
+            </summary>
+            <param name="logLevel">Log level string to check</param>
+            <returns>True if valid log level, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.RegexPatterns.IsValidFileExtension(System.String)">
+            <summary>
+            Checks if a file extension is valid
+            </summary>
+            <param name="extension">File extension to check</param>
+            <returns>True if valid extension, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.RegexPatterns.IsValidDimension(System.Double)">
+            <summary>
+            Checks if a dimension value is valid
+            </summary>
+            <param name="value">Dimension value to check</param>
+            <returns>True if valid dimension, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Constants.RegexPatterns.IsValidDpi(System.Int32)">
+            <summary>
+            Checks if a DPI value is valid
+            </summary>
+            <param name="dpi">DPI value to check</param>
+            <returns>True if valid DPI, False otherwise</returns>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Constants.RendererEngine">
+            <summary>
+            Rendering engine selection for ZPL to PDF.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RendererEngine.Offline">
+            <summary>
+            Offline rendering using BinaryKits (no internet).
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RendererEngine.Labelary">
+            <summary>
+            Rendering via Labelary online API.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.Shared.Constants.RendererEngine.Auto">
+            <summary>
+            Try Labelary first, fallback to Offline on failure.
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Localization.LanguageConfigManager">
+            <summary>
+            Manages language configuration persistence
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LanguageConfigManager.SetLanguagePermanently(System.String)">
+            <summary>
+            Sets the language permanently via environment variable
+            </summary>
+            <param name="languageCode">Language code (e.g., "pt-BR", "en-US")</param>
+            <returns>True if successful, false otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LanguageConfigManager.ResetLanguage">
+            <summary>
+            Resets language configuration to system default
+            </summary>
+            <returns>True if successful, false otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LanguageConfigManager.ShowLanguageConfiguration">
+            <summary>
+            Shows current language configuration and detection order
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LanguageConfigManager.IsValidLanguageCode(System.String)">
+            <summary>
+            Validates if a language code is supported
+            </summary>
+            <param name="languageCode">Language code to validate</param>
+            <returns>True if valid, false otherwise</returns>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Localization.LocalizationManager">
+            <summary>
+            Manages localization and multi-language support for ZPL2PDF
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.Initialize">
+            <summary>
+            Initializes the localization manager with automatic language detection
+            Priority: Environment Variable > Config File > System Detection
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.InitializeWithConfig(System.String)">
+            <summary>
+            Initializes the localization manager with configuration language
+            Priority: Environment Variable > Config File > System Detection
+            </summary>
+            <param name="configLanguage">Language from configuration file</param>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.Initialize(System.Globalization.CultureInfo)">
+            <summary>
+            Initializes the localization manager with a specific culture
+            </summary>
+            <param name="culture">The culture to use for localization</param>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.Initialize(System.String)">
+            <summary>
+            Initializes the localization manager with a specific language code
+            </summary>
+            <param name="languageCode">Language code (e.g., "pt-BR", "en-US")</param>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.GetString(System.String,System.Object[])">
+            <summary>
+            Gets a localized string by key
+            </summary>
+            <param name="key">The resource key</param>
+            <param name="args">Format arguments</param>
+            <returns>Localized string</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.DetectLanguageWithPriority(System.String)">
+            <summary>
+            Detects language with priority: Env Var > Config File > System Detection
+            </summary>
+            <param name="configLanguage">Language from configuration file (optional)</param>
+            <returns>CultureInfo for the detected language</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.DetectSystemLanguage">
+            <summary>
+            Detects the system language and returns appropriate culture
+            </summary>
+            <returns>CultureInfo for the detected language</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.ExtractCultureFromLang(System.String)">
+            <summary>
+            Extracts culture name from LANG environment variable
+            </summary>
+            <param name="langValue">LANG environment variable value</param>
+            <returns>Culture name or null</returns>
+        </member>
+        <member name="M:ZPL2PDF.Shared.Localization.LocalizationManager.IsCultureSupported(System.String)">
+            <summary>
+            Checks if a culture is supported by the application
+            </summary>
+            <param name="cultureName">Culture name to check</param>
+            <returns>True if supported, false otherwise</returns>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Localization.LocalizationManager.CurrentCulture">
+            <summary>
+            Gets the current culture being used
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.Shared.Localization.LocalizationManager.SupportedCultures">
+            <summary>
+            Gets all supported cultures
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.Shared.Localization.ResourceKeys">
+            <summary>
+            Contains all resource keys for localization
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.DefaultSettings">
+            <summary>
+            Centralized default settings for ZPL2PDF application
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.DefaultSettings.GetDefaultWidth(System.String)">
+            <summary>
+            Gets default width in the specified unit
+            </summary>
+            <param name="unit">Unit of measurement (mm, cm, in)</param>
+            <returns>Default width in the specified unit</returns>
+        </member>
+        <member name="M:ZPL2PDF.DefaultSettings.GetDefaultHeight(System.String)">
+            <summary>
+            Gets default height in the specified unit
+            </summary>
+            <param name="unit">Unit of measurement (mm, cm, in)</param>
+            <returns>Default height in the specified unit</returns>
+        </member>
+        <member name="M:ZPL2PDF.DefaultSettings.ConvertUnit(System.Double,System.String,System.String)">
+            <summary>
+            Converts dimensions from one unit to another
+            </summary>
+            <param name="value">Value to convert</param>
+            <param name="fromUnit">Source unit</param>
+            <param name="toUnit">Target unit</param>
+            <returns>Converted value</returns>
+        </member>
+        <member name="M:ZPL2PDF.DefaultSettings.GetDefaultDimensions(System.String)">
+            <summary>
+            Gets default dimensions as a LabelDimensions object
+            </summary>
+            <param name="unit">Unit of measurement</param>
+            <returns>Default dimensions</returns>
+        </member>
+        <member name="M:ZPL2PDF.DefaultSettings.ConvertMmToPoints(System.Double)">
+            <summary>
+            Converts millimeters to points
+            </summary>
+            <param name="mm">Value in millimeters</param>
+            <returns>Value in points</returns>
+        </member>
+        <member name="M:ZPL2PDF.DefaultSettings.ConvertPointsToMm(System.Int32)">
+            <summary>
+            Converts points to millimeters
+            </summary>
+            <param name="points">Value in points</param>
+            <returns>Value in millimeters</returns>
+        </member>
+        <member name="T:ZPL2PDF.LabelFileReader">
+            <summary>
+            Responsible for reading the input file and splitting the ZPL labels.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.LabelFileReader.FieldNumberRegex">
+            <summary>
+            Pre-compiled regex for better performance (compiled once, used many times).
+            Pattern: ^FN followed by digits, optional whitespace, then lookahead for ^FD.
+            Includes timeout protection against ReDoS attacks on large inputs.
+            </summary>
+        </member>
+        <member name="F:ZPL2PDF.LabelFileReader.CleanupCommandRegex">
+            <summary>
+            Pre-compiled regex for detecting cleanup commands (^IDR:filename^FS).
+            Includes timeout protection against ReDoS attacks on large inputs.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.ReadFile(System.String)">
+            <summary>
+            Reads the file and returns its content.
+            </summary>
+            <param name="filePath">Path to the input file.</param>
+            <returns>Content of the file.</returns>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.SplitLabels(System.String)">
+            <summary>
+            Splits the content into a list of ZPL labels based on the delimiters "^XA" and "^XZ".
+            Processes the file sequentially, maintaining graphic state in memory (like a printer would).
+            Handles ~DGR (define graphic), ^IDR (delete graphic), and ^XA...^XZ (labels) commands.
+            </summary>
+            <param name="content">Content of the file.</param>
+            <returns>List of ZPL labels with appropriate graphics prepended.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when content is null.</exception>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.IsValidLabelStart(System.String,System.Int32)">
+            <summary>
+            Returns true if the position is a valid start of a ZPL label (^XA).
+            We reject ^XA only when it appears inside the base64 segment of a ~DGR line
+            (between ":Z64:" and the next ":"), so we don't treat "^XA" inside ~DGR base64 as a label start.
+            ^XA that appears after the ~DGR payload on the same line (e.g. after :checksum) is valid.
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.BuildLabelWithGraphics(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Builds a complete label by prepending all graphics currently in memory.
+            </summary>
+            <param name="label">The label content (^XA...^XZ).</param>
+            <param name="graphicsInMemory">Dictionary of graphics currently in memory.</param>
+            <returns>Complete label with graphics prepended.</returns>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.IsCleanupCommandOnly(System.String)">
+            <summary>
+            Determines if a label content is only a cleanup command (e.g., ^IDR:filename^FS).
+            These commands should not be rendered as separate pages.
+            </summary>
+            <param name="labelContent">Label content without ^XA and ^XZ delimiters.</param>
+            <returns>True if the label is only a cleanup command, false otherwise.</returns>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.PreprocessZpl(System.String)">
+            <summary>
+            Preprocesses ZPL content to handle unsupported or problematic commands.
+            Currently handles:
+            - ^FN (Field Number): Removes ^FN tags when followed by ^FD, as BinaryKits.Zpl.Viewer
+              doesn't fully support field templates. The ^FD content is preserved for direct rendering.
+            - ^FH hex in ^FD: Decodes d+XX sequences (UTF-8 bytes, d = optional ^FH indicator, default '_') into Unicode
+              so the viewer renders accented characters (ã, ç, ú, etc.) correctly instead of Ã£, Ã§, Ãº.
+            </summary>
+            <param name="content">Raw ZPL content.</param>
+            <returns>Preprocessed ZPL content ready for rendering.</returns>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.DecodeFhHexInFieldData(System.String)">
+            <summary>
+            Replaces dXX hex sequences (from ^FH) in ^FD...^FS blocks with the corresponding UTF-8 character,
+            where d is the hexadecimal indicator from ^FH (default '_' per ZPL).
+            Prevents BinaryKits from interpreting UTF-8 bytes as Latin-1 (e.g. Ã£ instead of ã).
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelFileReader.DecodeFhHexSequence(System.String,System.Char)">
+            <summary>
+            Decodes a string containing dXX (hex byte) sequences into UTF-8 text, where d is the ^FH indicator (default '_').
+            Consecutive dXX are treated as one UTF-8 byte sequence (e.g. _C3_A3 or \C3\A3 with indicator '\' -> ã).
+            </summary>
+        </member>
+        <member name="T:ZPL2PDF.ZplDimensionExtractor">
+            <summary>
+            Extracts ZPL label dimensions (^PW and ^LL) and converts points to mm
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.ExtractDimensions(System.String)">
+            <summary>
+            Extracts dimensions from all labels in a ZPL file
+            </summary>
+            <param name="zplContent">Complete ZPL content</param>
+            <returns>List of dimensions for each label</returns>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.ExtractDimensionsFromLabel(System.String)">
+            <summary>
+            Extracts dimensions from an individual label
+            </summary>
+            <param name="labelContent">Content of a label (^XA...^XZ)</param>
+            <returns>Label dimensions</returns>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.ConvertPointsToMm(System.Int32,System.Int32)">
+            <summary>
+            Converts points to millimeters
+            </summary>
+            <param name="points">Value in points</param>
+            <param name="dpi">Printer DPI</param>
+            <returns>Value in millimeters</returns>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.ConvertMmToPoints(System.Double,System.Int32)">
+            <summary>
+            Converts millimeters to points
+            </summary>
+            <param name="mm">Value in millimeters</param>
+            <param name="dpi">Printer DPI</param>
+            <returns>Value in points</returns>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.SplitLabels(System.String)">
+            <summary>
+            Divides ZPL content into individual labels
+            </summary>
+            <param name="zplContent">Complete ZPL content</param>
+            <returns>List of individual labels</returns>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.ValidateDimensions(ZPL2PDF.LabelDimensions)">
+            <summary>
+            Validates if the extracted dimensions are valid
+            </summary>
+            <param name="dimensions">Dimensions to be validated</param>
+            <returns>True if valid, False otherwise</returns>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.GetDefaultDimensions">
+            <summary>
+            Gets default dimensions when it's not possible to extract from ZPL
+            </summary>
+            <returns>Default dimensions (100mm x 150mm)</returns>
+        </member>
+        <member name="M:ZPL2PDF.ZplDimensionExtractor.ApplyPriorityLogic(System.Nullable{System.Double},System.Nullable{System.Double},System.String,ZPL2PDF.LabelDimensions,System.Int32)">
+            <summary>
+            Applies priority logic for dimensions
+            </summary>
+            <param name="explicitWidth">Explicit width (parameter -w)</param>
+            <param name="explicitHeight">Explicit height (parameter -h)</param>
+            <param name="explicitUnit">Explicit unit (parameter -u)</param>
+            <param name="zplDimensions">Dimensions extracted from ZPL</param>
+            <param name="dpi">DPI to use for conversions</param>
+            <returns>Final dimensions to be used</returns>
+        </member>
+        <member name="T:ZPL2PDF.LabelDimensions">
+            <summary>
+            Represents the dimensions of a label
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.LabelDimensions.Width">
+            <summary>
+            Width in points
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.LabelDimensions.Height">
+            <summary>
+            Height in points
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.LabelDimensions.WidthMm">
+            <summary>
+            Width in millimeters
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.LabelDimensions.HeightMm">
+            <summary>
+            Height in millimeters
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.LabelDimensions.Dpi">
+            <summary>
+            DPI used for conversion
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.LabelDimensions.HasDimensions">
+            <summary>
+            Indicates if dimensions were successfully extracted
+            </summary>
+        </member>
+        <member name="P:ZPL2PDF.LabelDimensions.Source">
+            <summary>
+            Source of dimensions (explicit_parameters, zpl_extraction, default)
+            </summary>
+        </member>
+        <member name="M:ZPL2PDF.LabelDimensions.ToString">
+            <summary>
+            Returns a string representation of the dimensions
+            </summary>
+            <returns>Formatted string with dimensions</returns>
+        </member>
+    </members>
+</doc>

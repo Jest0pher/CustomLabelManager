@@ -1,0 +1,12 @@
+{
+  "DefaultListenFolder": "C:\\Users\\jesse\\Documents\\ZPL2PDF Auto Converter",
+  "LabelWidth": 100,
+  "LabelHeight": 150,
+  "Unit": "mm",
+  "Dpi": 203,
+  "LogLevel": "Info",
+  "RetryDelay": 2000,
+  "MaxRetries": 3,
+  "AutoStart": false,
+  "Language": null
+}

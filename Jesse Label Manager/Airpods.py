@@ -57,13 +57,17 @@ class AirpodsLabel(CustomLabel):
     snLabels = []
     printLabelsZPL : str = ""
     ffLabel : ttk.Label
+    ffMagLabel : ttk.Label
     goodCaseLabel : ttk.Label
+    goodMagCaseLabel : ttk.Label
     goodLLabel : ttk.Label
     goodRLabel : ttk.Label
     badCaseLabel : ttk.Label
+    badMagCaseLabel : ttk.Label
     badLLabel : ttk.Label
     badRLabel : ttk.Label
     ffStr : StringVar
+    ffMagStr : StringVar
     goodCaseStr : StringVar
     goodMagCaseStr : StringVar
     goodLStr : StringVar
@@ -73,6 +77,7 @@ class AirpodsLabel(CustomLabel):
     badLStr : StringVar
     badRStr : StringVar
     ffEntry : ttk.Entry
+    ffMagEntry : ttk.Entry
     goodCaseEntry : ttk.Entry
     goodMagCaseEntry : ttk.Entry
     goodLEntry : ttk.Entry
@@ -157,6 +162,7 @@ class AirpodsLabel(CustomLabel):
         self.goodMagCaseStr = StringVar()
         self.goodLStr = StringVar()
         self.goodRStr = StringVar()
+        self.ffMagStr = StringVar()
         self.badCaseStr = StringVar()
         self.badMagCaseStr = StringVar()
         self.badLStr = StringVar()
@@ -183,8 +189,10 @@ class AirpodsLabel(CustomLabel):
         self.goodREntry = ttk.Entry(self.frame, textvariable=self.goodRStr)
         self.goodREntry.grid(column=startColumn+2, row=self.serialEntryStartRow+4)
 
-        self.icloudCheck = ttk.Checkbutton(self.frame, text="iCloud Locked", variable=self.icloudBool)
-        self.icloudCheck.grid(column=startColumn+4, row=self.serialEntryStartRow)
+        self.ffMagLabel = ttk.Label(self.frame, text="Fully Functional Magsafe")
+        self.ffMagLabel.grid(column=startColumn+3, row=self.serialEntryStartRow)
+        self.ffMagEntry = ttk.Entry(self.frame, textvariable=self.ffMagStr)
+        self.ffMagEntry.grid(column=startColumn+4, row=self.serialEntryStartRow)
         self.badCaseLabel = ttk.Label(self.frame, text="Bad Case:")
         self.badCaseLabel.grid(column=startColumn+3, row=self.serialEntryStartRow+1)
         self.badCaseEntry = ttk.Entry(self.frame, textvariable=self.badCaseStr)
@@ -201,6 +209,8 @@ class AirpodsLabel(CustomLabel):
         self.badRLabel.grid(column=startColumn+3, row=self.serialEntryStartRow+4)
         self.badREntry = ttk.Entry(self.frame, textvariable=self.badRStr)
         self.badREntry.grid(column=startColumn+4, row=self.serialEntryStartRow+4)
+        self.icloudCheck = ttk.Checkbutton(self.frame, text="iCloud Locked", variable=self.icloudBool)
+        self.icloudCheck.grid(column=startColumn+4, row=self.serialEntryStartRow+5)
 
         self.HidePrint()
 
@@ -274,10 +284,10 @@ class AirpodsLabel(CustomLabel):
         ttk.Label(self.frame, text=" ").grid(column=startColumn+1,row=self.serialEntryStartRow+3)
 
         self.engravedButton = Button(self.frame, text="Print Engraved", command=self.PrintEngravedLabel)
-        self.engravedButton.grid(column=startColumn+3, row=self.serialEntryStartRow+6)
-        self.engravedButton = Button(self.frame, text="Print Mismatched", command=self.PrintMismatchedLabel)
         self.engravedButton.grid(column=startColumn+3, row=self.serialEntryStartRow+7)
-        self.DisplayPrintButton(startColumn+3, self.serialEntryStartRow+8)
+        self.engravedButton = Button(self.frame, text="Print Mismatched", command=self.PrintMismatchedLabel)
+        self.engravedButton.grid(column=startColumn+3, row=self.serialEntryStartRow+8)
+        self.DisplayPrintButton(startColumn+3, self.serialEntryStartRow+9)
 
         self.Load()
 
@@ -409,6 +419,8 @@ class AirpodsLabel(CustomLabel):
         self.goodLEntry.grid_remove()
         self.goodRLabel.grid_remove()
         self.goodREntry.grid_remove()
+        self.ffMagLabel.grid_remove()
+        self.ffMagEntry.grid_remove()
         self.badCaseLabel.grid_remove()
         self.badCaseEntry.grid_remove()
         self.badMagCaseLabel.grid_remove()
@@ -440,6 +452,8 @@ class AirpodsLabel(CustomLabel):
             self.goodMagCaseEntry.grid()
             self.badMagCaseLabel.grid()
             self.badMagCaseEntry.grid()
+            self.ffMagLabel.grid()
+            self.ffMagEntry.grid()
 
     def PrintBagLabels(self):
         self.printLabelsZPL = ""
