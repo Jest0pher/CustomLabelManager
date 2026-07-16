@@ -118,7 +118,7 @@ class ManifestChecker(CustomLabel):
         self.checkerListFrame = ttk.Frame(self.checkerFrame)
         self.checkerListFrame.grid(column=0, row=1)
         self.checkerOutputFrame = ttk.Frame(self.checkerListFrame)
-        self.checkerOutputFrame.grid(column=0, row=0)
+        self.checkerOutputFrame.grid(column=0, row=0, sticky="nsew")
         self.checkerCurrentFrame = ttk.Frame(self.checkerOutputFrame)
         self.checkerCurrentFrame.grid(column=0, row=0)
         ttk.Label(self.checkerCurrentFrame, text="Case").grid(column=0, row=0)
@@ -144,11 +144,11 @@ class ManifestChecker(CustomLabel):
         self.listRightDefectLabel.grid(column=2, row=3)
         self.resultFrame = ttk.Frame(self.checkerOutputFrame)
         self.resultFrame.grid(column=0, row=1)
-        self.resultLabel = ttk.Label(self.resultFrame, text="Result")
+        self.resultLabel = ttk.Label(self.resultFrame, text="Result", background="green", foreground="black", width=50)
         self.resultLabel.grid(column=0, row=0)
+        #style = ttk.Style().configure("CustomBackground.TFrame", background="blue")
         self.icloudFrame = ttk.Frame(self.checkerOutputFrame)
         self.icloudFrame.grid(column=0, row=2)
-        #style = ttk.Style().configure("CustomBackground.TFrame", background="blue")
         self.icloudLabel = ttk.Label(self.icloudFrame, text="iCloud Status", background="blue", foreground="black")
         self.icloudLabel.grid(column=0, row=0)
 
@@ -195,14 +195,115 @@ class ManifestChecker(CustomLabel):
     def SearchManifest(self):
         #uses current string in serialEntry
         #clear serial entry after search
+        index = -1
+        serialToSearch = self.searchString.get().upper()
+        match self.functionalityString.get():
+            case "Fully Functional":
+                if serialToSearch in self.caseSerials:
+                    index = self.caseSerials.index(serialToSearch)
+                    if self.caseFunctionality[index] != "Fully Functional" or self.leftFunctionality[index] != "Fully Functional" or self.rightFunctionality[index] != "Fully Functional":
+                        self.SetResult(False, "Not Fully Functional")
+                    else:
+                        self.SetResult(True, "Fully Functional")
+            case "Good Case":
+                if serialToSearch in self.caseSerials:
+                    index = self.caseSerials.index(serialToSearch)
+                    if self.caseFunctionality[index] != "Good Case":
+                        self.SetResult(False, self.caseDefects[index])
+                    else:
+                        if self.caseFunctionality[index] == "Fully Functional" and self.leftFunctionality[index] == "Fully Functional" and self.rightFunctionality[index] == "Fully Functional":
+                            self.SetResult(False, "Fully Functional")
+                        else:
+                            self.SetResult(True, self.caseDefects[index])
+            case "Good Left Bud":
+                if serialToSearch in self.leftSerials:
+                    index = self.leftSerials.index(serialToSearch)
+                    if self.leftFunctionality[index] != "Good Left Bud":
+                        self.SetResult(False, self.leftDefects[index])
+                    else:
+                        self.SetResult(True, "")
+            case "Good Right Bud":
+                if serialToSearch in self.rightSerials:
+                    index = self.rightSerials.index(serialToSearch)
+                    if self.rightFunctionality[index] != "Good Right Bud":
+                        self.SetResult(False, self.rightDefects[index])
+                    else:
+                        self.SetResult(True, "")
+            case "Bad Case":
+                if serialToSearch in self.caseSerials:
+                    index = self.caseSerials.index(serialToSearch)
+                    if self.caseFunctionality[index] != "Bad Case":
+                        self.SetResult(False, "Not Bad Case")
+                    else:
+                        self.SetResult(True, self.caseDefects[index])
+            case "Bad Left Bud":
+                if serialToSearch in self.leftSerials:
+                    index = self.leftSerials.index(serialToSearch)
+                    if self.leftFunctionality[index] != "Bad Left Bud":
+                        self.SetResult(False, "Not Bad Left Bud")
+                    else:
+                        self.SetResult(True, self.leftDefects[index])
+            case "Bad Right Bud":
+                if serialToSearch in self.rightSerials:
+                    index = self.rightSerials.index(serialToSearch)
+                    if self.rightFunctionality[index] != "Bad Right Bud":
+                        self.SetResult(False, "Not Bad Right Bud")
+                    else:
+                        self.SetResult(True, self.rightDefects[index])
+        if index != -1:
+            self.SetCurrentSet(index)
+            self.UpdateList(serialToSearch)
+        else:
+            self.SetResult(False, "Serial not found")
         pass
-
+    
+    def SetCurrentSet(self, index : int):
+        self.listCaseFuncString.set(self.caseFunctionality[index])
+        self.listCaseSerialString.set(self.caseSerials[index])
+        self.listCaseDefectString.set(self.caseDefects[index])
+        self.listLeftFuncString.set(self.leftFunctionality[index])
+        self.listLeftSerialString.set(self.leftSerials[index])
+        self.listLeftDefectString.set(self.leftDefects[index])
+        self.listRightFuncString.set(self.rightFunctionality[index])
+        self.listRightSerialString.set(self.rightSerials[index])
+        self.listRightDefectString.set(self.rightDefects[index])
+    
+    def UpdateList(self, serial : str):
+        if serial in self.currentListSerials:
+            return
+        self.currentListSerials.insert(0, serial)
+        self.currentCountValue.set(len(self.currentListSerials))
+        self.currentCountLabel.config(text="Current Count: " + str(self.currentCountValue.get()))
+        self.currentListVar.set(self.currentListSerials)
+    
     def RemovePrevious(self):
-        pass
+        self.currentListSerials.pop(0)
+        self.currentCountValue.set(len(self.currentListSerials))
+        self.currentCountLabel.config(text="Current Count: " + str(self.currentCountValue.get()))
+        self.currentListVar.set(self.currentListSerials)
     def RemoveSelected(self):
-        pass
+        index = self.currentListBox.curselection()
+        if len(index) > 0:
+            self.currentListSerials.pop(index[0])
+            self.currentCountValue.set(len(self.currentListSerials))
+            self.currentCountLabel.config(text="Current Count: " + str(self.currentCountValue.get()))
+            self.currentListVar.set(self.currentListSerials)
+    
     def ClearList(self):
-        pass
+        self.currentListSerials.clear()
+        self.currentCountValue.set(len(self.currentListSerials))
+        self.currentCountLabel.config(text="Current Count: " + str(self.currentCountValue.get()))
+        self.currentListVar.set(self.currentListSerials)
+
+    def SetResult(self, good : bool, defects : str = ""):
+        if good:
+            self.resultLabel.config(text=defects, background="green")
+        else:
+            self.resultLabel.config(text=defects, background="red")
+        if "iCloud" in defects:
+            self.icloudFrame.grid()
+        else:
+            self.icloudFrame.grid_remove()
 
     def WindowFocused(self,event):
         pass
