@@ -87,6 +87,9 @@ class LabelManager:
         airpodsButton = Radiobutton(self.frame, text="Airpods", value='5', variable=self.currentButton, command=self.CreateAirpodsLabel)
         airpodsButton.grid(column=0,row=currentRow+5)
 
+        manifestButton = Radiobutton(self.frame, text="Manifest", value='6', variable=self.currentButton, command=self.CreateManifestLabel)
+        manifestButton.grid(column=0,row=currentRow+6)
+
         #self.buttons = [serialButton, qtyButton]
 
 
@@ -144,6 +147,13 @@ class LabelManager:
         if self.ToggleButton(5):
             airpodsLabel = AirpodsLabel(self.root, width=self.labelWidth, height=self.labelHeight, mm=self.units.get(), startRow=0, startColumn=2)
             self.labelPrinter.SetLabel(airpodsLabel)
+
+    def CreateManifestLabel(self):
+        self.UpdateLabelSize()
+        if self.ToggleButton(6):
+            manifestLabel = ManifestChecker(self.root, width=self.labelWidth, height=self.labelHeight, mm=self.units.get(), startRow=0, startColumn=2)
+            self.labelPrinter.SetLabel(manifestLabel)
+
     #def TestFunc(self):
     #    if self.ToggleButton(1):
     #        print("test")
