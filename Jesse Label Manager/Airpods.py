@@ -88,6 +88,9 @@ class AirpodsLabel(CustomLabel):
     badREntry : ttk.Entry
     icloudBool : BooleanVar
     icloudCheck : ttk.Checkbutton
+    printSerialClearBool : BooleanVar
+    printSerialClearCheck : ttk.Checkbutton
+    printClearButton : ttk.Button
     engravedButton : ttk.Button
     printEngravedQueued : bool = False
     engravedZPL : str = "^XA^PW599^LL299^FO23,35^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,94^A0N,41,41^FB599,1,0,L,0^FDEngraved^FS^FO23,153^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,212^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,271^A0N,41,41^FB599,1,0,L,0^FD^FS^XZ"
@@ -168,6 +171,7 @@ class AirpodsLabel(CustomLabel):
         self.badLStr = StringVar()
         self.badRStr = StringVar()
         self.icloudBool = BooleanVar(value=True)
+        self.printSerialClearBool = BooleanVar(value=True)
         self.ffLabel = ttk.Label(self.frame, text="Fully Functional:")
         self.ffLabel.grid(column=startColumn+1, row=self.serialEntryStartRow)
         self.ffEntry = ttk.Entry(self.frame, textvariable=self.ffStr)
@@ -188,6 +192,10 @@ class AirpodsLabel(CustomLabel):
         self.goodRLabel.grid(column=startColumn+1, row=self.serialEntryStartRow+4)
         self.goodREntry = ttk.Entry(self.frame, textvariable=self.goodRStr)
         self.goodREntry.grid(column=startColumn+2, row=self.serialEntryStartRow+4)
+        self.printSerialClearCheck = ttk.Checkbutton(self.frame, text="Clear on Print", variable=self.printSerialClearBool)
+        self.printSerialClearCheck.grid(column=startColumn+2, row=self.serialEntryStartRow+5)
+        self.printClearButton = ttk.Button(self.frame, text="Clear Values", command=self.ClearPrintSerials)
+        self.printClearButton.grid(column=startColumn+1, row=self.serialEntryStartRow+5)
 
         self.ffMagLabel = ttk.Label(self.frame, text="Fully Functional Magsafe")
         self.ffMagLabel.grid(column=startColumn+3, row=self.serialEntryStartRow)
@@ -430,6 +438,8 @@ class AirpodsLabel(CustomLabel):
         self.badRLabel.grid_remove()
         self.badREntry.grid_remove()
         self.icloudCheck.grid_remove()
+        self.printSerialClearCheck.grid_remove()
+        self.printClearButton.grid_remove()
 
     def ShowPrint(self):
         self.ffLabel.grid()
@@ -447,6 +457,8 @@ class AirpodsLabel(CustomLabel):
         self.badRLabel.grid()
         self.badREntry.grid()
         self.icloudCheck.grid()
+        self.printSerialClearCheck.grid()
+        self.printClearButton.grid()
         if self.caseModel.get() == "A2190":
             self.goodMagCaseLabel.grid()
             self.goodMagCaseEntry.grid()
@@ -494,6 +506,17 @@ class AirpodsLabel(CustomLabel):
             if skipped == False:
                 self.printLabelsZPL += label.dumpZPL()
         
+    def ClearPrintSerials(self):
+        self.ffStr.set("")
+        self.ffMagStr.set("")
+        self.goodCaseStr.set("")
+        self.goodMagCaseStr.set("")
+        self.badCaseStr.set("")
+        self.badMagCaseStr.set("")
+        self.goodLStr.set("")
+        self.goodRStr.set("")
+        self.badLStr.set("")
+        self.badRStr.set("")
 
     def ParseCompleteSerials(self) -> list[str]:
         serials : list[str] = self.allSN.get().split('\t')
@@ -588,7 +611,8 @@ class AirpodsLabel(CustomLabel):
             self.rightSN.set("")
             self.caseSNEntry.focus_set()
         elif self.printType.get() == "Print":
-            pass
+            if self.printSerialClearBool.get():
+                self.ClearPrintSerials()
         else:
             self.prevAllSN.set(self.allSN.get())
             self.allSN.set("")
@@ -676,6 +700,30 @@ class AirpodsLabel(CustomLabel):
                 self.allFormat.set(loadDict["allFormat"])
             if "scpoBuds" in keys:
                 self.scpoBuds.set(loadDict["scpoBuds"])
+            if "ffStr" in keys:
+                self.ffStr.set(loadDict["ffStr"])
+            if "ffMagStr" in keys:
+                self.ffMagStr.set(loadDict["ffMagStr"])
+            if "goodCaseStr" in keys:
+                self.goodCaseStr.set(loadDict["goodCaseStr"])
+            if "goodMagCaseStr" in keys:
+                self.goodMagCaseStr.set(loadDict["goodMagCaseStr"])
+            if "badCaseStr" in keys:
+                self.badCaseStr.set(loadDict["badCaseStr"])
+            if "badMagCaseStr" in keys:
+                self.badMagCaseStr.set(loadDict["badMagCaseStr"])
+            if "goodLStr" in keys:
+                self.goodLStr.set(loadDict["goodLStr"])
+            if "goodRStr" in keys:
+                self.goodRStr.set(loadDict["goodRStr"])
+            if "badLStr" in keys:
+                self.badLStr.set(loadDict["badLStr"])
+            if "badRStr" in keys:
+                self.badRStr.set(loadDict["badRStr"])
+            if "icloudBool" in keys:
+                self.icloudBool.set(loadDict["icloudBool"])
+            if "printSerialClearBool" in keys:
+                self.printSerialClearBool.set(loadDict["printSerialClearBool"])
         
         self.CaseModelChanged(self.caseModel.get())
         if self.printType.get() == "Complete":
@@ -707,4 +755,16 @@ class AirpodsLabel(CustomLabel):
         saveDict["prevAllSerial"] = self.prevAllSN.get()
         saveDict["allFormat"] = self.allFormat.get()
         saveDict["scpoBuds"] = self.scpoBuds.get()
+        saveDict["ffStr"] = self.ffStr.get()
+        saveDict["ffMagStr"] = self.ffMagStr.get()
+        saveDict["goodCaseStr"] = self.goodCaseStr.get()
+        saveDict["goodMagCaseStr"] = self.goodMagCaseStr.get()
+        saveDict["badCaseStr"] = self.badCaseStr.get()
+        saveDict["badMagCaseStr"] = self.badMagCaseStr.get()
+        saveDict["goodLStr"] = self.goodLStr.get()
+        saveDict["goodRStr"] = self.goodRStr.get()
+        saveDict["badLStr"] = self.badLStr.get()
+        saveDict["badRStr"] = self.badRStr.get()
+        saveDict["icloudBool"] = self.icloudBool.get()
+        saveDict["printSerialClearBool"] = self.printSerialClearBool.get()
         return saveDict

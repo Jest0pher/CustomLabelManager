@@ -2,6 +2,7 @@ import csv
 
 from GlobalImport import *
 from Custom import CustomLabel
+from playsound import playsound
 
 class ManifestChecker(CustomLabel):
     
@@ -106,6 +107,7 @@ class ManifestChecker(CustomLabel):
         self.searchEntry.grid(column=2, row=0)
 
 
+        style = ttk.Style().configure("CustomBackground.TFrame", background="red")
         self.listCaseFuncString = StringVar(value="Fully Functional")
         self.listCaseSerialString = StringVar(value="XXXXXXXXXXXX")
         self.listCaseDefectString = StringVar(value="Case Defect")
@@ -118,7 +120,7 @@ class ManifestChecker(CustomLabel):
         self.checkerListFrame = ttk.Frame(self.checkerFrame)
         self.checkerListFrame.grid(column=0, row=1)
         self.checkerOutputFrame = ttk.Frame(self.checkerListFrame)
-        self.checkerOutputFrame.grid(column=0, row=0, sticky="nsew")
+        self.checkerOutputFrame.grid(column=0, row=0)
         self.checkerCurrentFrame = ttk.Frame(self.checkerOutputFrame)
         self.checkerCurrentFrame.grid(column=0, row=0)
         ttk.Label(self.checkerCurrentFrame, text="Case").grid(column=0, row=0)
@@ -144,9 +146,8 @@ class ManifestChecker(CustomLabel):
         self.listRightDefectLabel.grid(column=2, row=3)
         self.resultFrame = ttk.Frame(self.checkerOutputFrame)
         self.resultFrame.grid(column=0, row=1)
-        self.resultLabel = ttk.Label(self.resultFrame, text="Result", background="green", foreground="black", width=50)
+        self.resultLabel = ttk.Label(self.resultFrame, text="Result", background="green", foreground="black")
         self.resultLabel.grid(column=0, row=0)
-        #style = ttk.Style().configure("CustomBackground.TFrame", background="blue")
         self.icloudFrame = ttk.Frame(self.checkerOutputFrame)
         self.icloudFrame.grid(column=0, row=2)
         self.icloudLabel = ttk.Label(self.icloudFrame, text="iCloud Status", background="blue", foreground="black")
@@ -201,59 +202,75 @@ class ManifestChecker(CustomLabel):
             case "Fully Functional":
                 if serialToSearch in self.caseSerials:
                     index = self.caseSerials.index(serialToSearch)
+                    self.SetCurrentSet(index)
                     if self.caseFunctionality[index] != "Fully Functional" or self.leftFunctionality[index] != "Fully Functional" or self.rightFunctionality[index] != "Fully Functional":
                         self.SetResult(False, "Not Fully Functional")
+                        return
                     else:
                         self.SetResult(True, "Fully Functional")
             case "Good Case":
                 if serialToSearch in self.caseSerials:
                     index = self.caseSerials.index(serialToSearch)
-                    if self.caseFunctionality[index] != "Good Case":
-                        self.SetResult(False, self.caseDefects[index])
-                    else:
+                    self.SetCurrentSet(index)
+                    if self.caseFunctionality[index] == "Fully Functional":
                         if self.caseFunctionality[index] == "Fully Functional" and self.leftFunctionality[index] == "Fully Functional" and self.rightFunctionality[index] == "Fully Functional":
                             self.SetResult(False, "Fully Functional")
+                            return
                         else:
                             self.SetResult(True, self.caseDefects[index])
+                    else:
+                        self.SetResult(False, self.caseDefects[index])
+                        return
             case "Good Left Bud":
                 if serialToSearch in self.leftSerials:
                     index = self.leftSerials.index(serialToSearch)
-                    if self.leftFunctionality[index] != "Good Left Bud":
-                        self.SetResult(False, self.leftDefects[index])
+                    self.SetCurrentSet(index)
+                    if self.leftFunctionality[index] == "Fully Functional":
+                        self.SetResult(True, self.leftDefects[index])
                     else:
-                        self.SetResult(True, "")
+                        self.SetResult(False, self.leftDefects[index])
+                        return
             case "Good Right Bud":
                 if serialToSearch in self.rightSerials:
                     index = self.rightSerials.index(serialToSearch)
-                    if self.rightFunctionality[index] != "Good Right Bud":
-                        self.SetResult(False, self.rightDefects[index])
+                    self.SetCurrentSet(index)
+                    if self.rightFunctionality[index] == "Fully Functional":
+                        self.SetResult(True, self.rightDefects[index])
                     else:
-                        self.SetResult(True, "")
+                        self.SetResult(False, self.rightDefects[index])
+                        return
             case "Bad Case":
                 if serialToSearch in self.caseSerials:
                     index = self.caseSerials.index(serialToSearch)
-                    if self.caseFunctionality[index] != "Bad Case":
-                        self.SetResult(False, "Not Bad Case")
-                    else:
+                    self.SetCurrentSet(index)
+                    if self.caseFunctionality[index] == "Defective":
                         self.SetResult(True, self.caseDefects[index])
+                    else:
+                        self.SetResult(False, "Not Bad Case")
+                        return
             case "Bad Left Bud":
                 if serialToSearch in self.leftSerials:
                     index = self.leftSerials.index(serialToSearch)
-                    if self.leftFunctionality[index] != "Bad Left Bud":
-                        self.SetResult(False, "Not Bad Left Bud")
-                    else:
+                    self.SetCurrentSet(index)
+                    if self.leftFunctionality[index] == "Defective":
                         self.SetResult(True, self.leftDefects[index])
+                    else:
+                        self.SetResult(False, "Not Bad Left Bud")
+                        return
             case "Bad Right Bud":
                 if serialToSearch in self.rightSerials:
                     index = self.rightSerials.index(serialToSearch)
-                    if self.rightFunctionality[index] != "Bad Right Bud":
-                        self.SetResult(False, "Not Bad Right Bud")
-                    else:
+                    self.SetCurrentSet(index)
+                    if self.rightFunctionality[index] == "Defective":
                         self.SetResult(True, self.rightDefects[index])
+                    else:
+                        self.SetResult(False, "Not Bad Right Bud")
+                        return
         if index != -1:
-            self.SetCurrentSet(index)
             self.UpdateList(serialToSearch)
         else:
+            if serialToSearch in self.caseSerials or serialToSearch in self.leftSerials or serialToSearch in self.rightSerials:
+                self.SetResult(False, "Incorrect Category")
             self.SetResult(False, "Serial not found")
         pass
     
@@ -268,13 +285,15 @@ class ManifestChecker(CustomLabel):
         self.listRightSerialString.set(self.rightSerials[index])
         self.listRightDefectString.set(self.rightDefects[index])
     
-    def UpdateList(self, serial : str):
+    def UpdateList(self, serial : str) -> bool:
         if serial in self.currentListSerials:
-            return
+            playsound("Jesse Label Manager/bonk.mp3")
+            return False
         self.currentListSerials.insert(0, serial)
         self.currentCountValue.set(len(self.currentListSerials))
         self.currentCountLabel.config(text="Current Count: " + str(self.currentCountValue.get()))
         self.currentListVar.set(self.currentListSerials)
+        return True
     
     def RemovePrevious(self):
         self.currentListSerials.pop(0)
@@ -298,8 +317,10 @@ class ManifestChecker(CustomLabel):
     def SetResult(self, good : bool, defects : str = ""):
         if good:
             self.resultLabel.config(text=defects, background="green")
+            playsound("Jesse Label Manager/correct.mp3",False)
         else:
             self.resultLabel.config(text=defects, background="red")
+            playsound("Jesse Label Manager/wrong.mp3", False)
         if "iCloud" in defects:
             self.icloudFrame.grid()
         else:
@@ -310,6 +331,7 @@ class ManifestChecker(CustomLabel):
 
     def EnteredPressed(self, event):
         self.SearchManifest()
+        self.searchString.set("")
 
     def Load(self, loadOverride = None):
         super().Load(loadOverride)
