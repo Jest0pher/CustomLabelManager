@@ -287,7 +287,7 @@ class ManifestChecker(CustomLabel):
     
     def UpdateList(self, serial : str) -> bool:
         if serial in self.currentListSerials:
-            playsound("bonk.mp3")
+            playsound(resource_path("Sounds/bonk.mp3"))
             return False
         self.currentListSerials.insert(0, serial)
         self.currentCountValue.set(len(self.currentListSerials))
@@ -317,10 +317,10 @@ class ManifestChecker(CustomLabel):
     def SetResult(self, good : bool, defects : str = ""):
         if good:
             self.resultLabel.config(text=defects, background="green")
-            playsound("correct.mp3",False)
+            playsound(resource_path("Sounds/correct.mp3"),False)
         else:
             self.resultLabel.config(text=defects, background="red")
-            playsound("wrong.mp3", False)
+            playsound(resource_path("Sounds/wrong.mp3"), False)
         if "iCloud" in defects:
             self.icloudFrame.grid()
         else:
