@@ -6,8 +6,9 @@ import os
 import sys
 import json
 import pyperclip
+import pathlib
 
-directory :str = os.path.expanduser('~\Documents\CustomLabels')
+directory :str = os.path.expanduser('~/Documents/CustomLabels')
 
 def TextBoxResize(label : zpl.Label, text : str, width : float, height : float, justification : str = 'L'):
     padding : float = 0.0
