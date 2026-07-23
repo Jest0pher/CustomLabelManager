@@ -374,7 +374,7 @@ class SerialLabel(CustomLabel):
         
         if self.hideModel.get() == False:
             self.l.origin(4,17)
-            self.l.write_text("Model: " + self.model.get(), char_height=3, char_width=3, line_width=30, justification='L')
+            self.l.write_text("Model: " + self.model.get(), char_height=3, char_width=3, line_width=50, justification='L')
             self.l.endorigin()
 
     def PastePreviousPressed(self):
