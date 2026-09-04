@@ -517,9 +517,13 @@ class AirpodsLabel(CustomLabel):
         self.goodRStr.set("")
         self.badLStr.set("")
         self.badRStr.set("")
-
+    
     def ParseCompleteSerials(self) -> list[str]:
         serials : list[str] = self.allSN.get().split('\t')
+        if serials.__len__() > 3:
+            serials = [serials[5], serials[11], serials[17]]
+            self.allSN.set(serials[0] + "\t" + serials[1] + "\t" + serials[2])
+
         if serials.__len__() == self.allFormat.get().__len__():
             self.parseError = False
             return serials
