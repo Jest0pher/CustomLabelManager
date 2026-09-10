@@ -6,4 +6,4 @@ Windows:
 python -m PyInstaller --onefile --name "Jesse Label Manager" --icon icon.ico --add-data "Sounds;Sounds" Jesse_Custom_Labels.py
 
 Mac:
-python -m PyInstaller --onefile --name "Jesse Label Manager" --icon icon.ico --add-data "Sounds:Sounds" Jesse_Custom_Labels.py
+python3 -m PyInstaller --onefile --name "Jesse Label Manager" --icon icon.ico --add-data "Sounds:Sounds" Jesse_Custom_Labels.py

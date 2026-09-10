@@ -98,7 +98,7 @@ class AirpodsLabel(CustomLabel):
     mismatchedZPL : str = "^XA^PW599^LL299^FO23,35^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,94^A0N,41,41^FB599,1,0,L,0^FDMismatched^FS^FO23,153^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,212^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,271^A0N,41,41^FB599,1,0,L,0^FD^FS^XZ"
 
     caseModels = ["A1602", "A1938", "A2190", "A2566", "A2700", "A2897", "A2968","A3058","A3059", "A3122"]
-    budsModels = [[("A2031","A2032"),("A1722","A1523")], [("A1722","A1523"),("A2031","A2032")], [("A2084", "A2083")], [("A2564", "A2565")], [("A2699","A2698")], [("A2564", "A2565")], [("A3048", "A3047"), ("A3049", "A3049")],[("A3053","A3050")],[("A3056","A3055")],[("A3064","A3063")]]
+    budsModels = [[("A2031","A2032"),("A1722","A1523")], [("A2031","A2032"),("A1722","A1523")], [("A2084", "A2083")], [("A2564", "A2565")], [("A2699","A2698"),("A3048", "A3047")], [("A2564", "A2565")], [("A3048", "A3047"), ("A2699","A2698")],[("A3053","A3050")],[("A3056","A3055")],[("A3064","A3063")]]
     currentLBuds : list[str] = ["1","3"]
     currentRBuds : list[str] = ["2","4"]
     
@@ -318,13 +318,11 @@ class AirpodsLabel(CustomLabel):
         tempRow : int = self.leftOptions.grid_info()["row"]
         self.leftOptions.destroy()
         self.rightOptions.destroy()
-        if not self.leftModel.get() in self.currentLBuds:
-            self.leftModel.set(self.currentLBuds[0])
+        self.leftModel.set(self.currentLBuds[0])
         self.currentLBuds.pop(self.currentLBuds.index(self.leftModel.get()))
         self.leftOptions = OptionMenu(self.frame, self.leftModel,self.leftModel.get(), *self.currentLBuds)
         self.leftOptions.grid(column=tempColumn, row=tempRow)
-        if not self.rightModel.get() in self.currentRBuds:
-            self.rightModel.set(self.currentRBuds[0])
+        self.rightModel.set(self.currentRBuds[0])
         self.currentRBuds.pop(self.currentRBuds.index(self.rightModel.get()))
         self.rightOptions = OptionMenu(self.frame, self.rightModel,self.rightModel.get(), *self.currentRBuds)
         self.rightOptions.grid(column=tempColumn+2, row=tempRow)
