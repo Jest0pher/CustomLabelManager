@@ -96,6 +96,9 @@ class AirpodsLabel(CustomLabel):
     engravedZPL : str = "^XA^PW599^LL299^FO23,35^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,94^A0N,41,41^FB599,1,0,L,0^FDEngraved^FS^FO23,153^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,212^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,271^A0N,41,41^FB599,1,0,L,0^FD^FS^XZ"
     printMismatchedQueued : bool = False
     mismatchedZPL : str = "^XA^PW599^LL299^FO23,35^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,94^A0N,41,41^FB599,1,0,L,0^FDMismatched^FS^FO23,153^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,212^A0N,41,41^FB599,1,0,L,0^FD^FS^FO23,271^A0N,41,41^FB599,1,0,L,0^FD^FS^XZ"
+    lineParseOffsetLabel : ttk.Label
+    lineParseOffset : StringVar
+    lineParseOffsetEntry : ttk.Entry
 
     caseModels = ["A1602", "A1938", "A2190", "A2566", "A2700", "A2897", "A2968","A3058","A3059", "A3122"]
     budsModels = [[("A2031","A2032"),("A1722","A1523")], [("A2031","A2032"),("A1722","A1523")], [("A2084", "A2083")], [("A2564", "A2565")], [("A2699","A2698"),("A3048", "A3047")], [("A2564", "A2565")], [("A3048", "A3047"), ("A2699","A2698")],[("A3053","A3050")],[("A3056","A3055")],[("A3064","A3063")]]
@@ -251,6 +254,11 @@ class AirpodsLabel(CustomLabel):
         self.allFormatLR = Radiobutton(self.frame, text="Left Right", value="LR", variable=self.allFormat)
         self.allFormatLR.grid(column=startColumn, row=self.serialEntryStartRow+3)
 
+        self.lineParseOffset = StringVar(value="5,11,17")
+        self.lineParseOffsetLabel = ttk.Label(self.frame, text="Line Parse Columns")
+        self.lineParseOffsetLabel.grid(column=startColumn+2, row=self.serialEntryStartRow+3)
+        self.lineParseOffsetEntry = ttk.Entry(self.frame, textvariable=self.lineParseOffset)
+        self.lineParseOffsetEntry.grid(column=startColumn+3, row=self.serialEntryStartRow+3)
         self.HideComplete()
         
         self.snLabels.clear()
@@ -398,6 +406,8 @@ class AirpodsLabel(CustomLabel):
         self.allFormatCL.grid_remove()
         self.allFormatCR.grid_remove()
         self.allFormatLR.grid_remove()
+        self.lineParseOffsetLabel.grid_remove()
+        self.lineParseOffsetEntry.grid_remove()
 
     def ShowComplete(self):
         self.allSNEntry.grid()
@@ -413,6 +423,8 @@ class AirpodsLabel(CustomLabel):
         self.allFormatCL.grid()
         self.allFormatCR.grid()
         self.allFormatLR.grid()
+        self.lineParseOffsetLabel.grid()
+        self.lineParseOffsetEntry.grid()
     
     def HidePrint(self):
         self.ffLabel.grid_remove()
@@ -517,9 +529,18 @@ class AirpodsLabel(CustomLabel):
         self.badRStr.set("")
     
     def ParseCompleteSerials(self) -> list[str]:
+        offsets = []
+        try:
+            offsets = [int(i) for i in self.lineParseOffset.get().split(',')]
+            if offsets.__len__() != 3:
+                offsets = [5,11,17]
+        except:
+            self.lineParseOffset.set("5,11,17")
+            offsets = [5,11,17]
+
         serials : list[str] = self.allSN.get().split('\t')
         if serials.__len__() > 3:
-            serials = [serials[5], serials[11], serials[17]]
+            serials = [serials[offsets[0]], serials[offsets[1]], serials[offsets[2]]]
             self.allSN.set(serials[0] + "\t" + serials[1] + "\t" + serials[2])
 
         if serials.__len__() == self.allFormat.get().__len__():
@@ -560,11 +581,16 @@ class AirpodsLabel(CustomLabel):
                         rightStr = serials[1]
         if self.parseError == False:
             self.l = self.FillData(caseStr, self.caseModel.get())
+            self.caseSN.set(caseStr)
             self.leftL = self.FillData(leftStr, self.leftModel.get(), isBud=True)
+            self.leftSN.set(leftStr)
             self.rightL = self.FillData(rightStr, self.rightModel.get(), isBud=True)
+            self.rightSN.set(rightStr)
         pass
 
     def FillData(self, serial : str, model : str, isBud : bool = False) -> zpl.Label:
+        if serial == "":
+            return None
         label = zpl.Label(self.height,self.width, 11.8)
         label.origin(1,4)
         
@@ -619,6 +645,9 @@ class AirpodsLabel(CustomLabel):
             self.prevAllSN.set(self.allSN.get())
             self.allSN.set("")
             self.allSNEntry.focus_set()
+            self.caseSN.set("")
+            self.leftSN.set("")
+            self.rightSN.set("")
 
     def GetPrintData(self, setData = True):
         if self.printEngravedQueued:
@@ -631,15 +660,8 @@ class AirpodsLabel(CustomLabel):
         if setData:
             self.SetLabelData()
         if self.parseError == False and self.printType.get() == "Complete":
-            match(self.allFormat.get()):
-                case "CLR":
-                    return self.l.dumpZPL() + self.leftL.dumpZPL() + self.rightL.dumpZPL()
-                case "CL":
-                    return self.l.dumpZPL() + self.leftL.dumpZPL()
-                case "CR":
-                    return self.l.dumpZPL() + self.rightL.dumpZPL()
-                case "LR":
-                    return self.leftL.dumpZPL() + self.rightL.dumpZPL()
+            return self.EmptyCheck("case") + self.EmptyCheck("left") + self.EmptyCheck("right")
+            
         elif self.printType.get() == "Print":
             return self.printLabelsZPL
         else:
@@ -726,6 +748,8 @@ class AirpodsLabel(CustomLabel):
                 self.icloudBool.set(loadDict["icloudBool"])
             if "printSerialClearBool" in keys:
                 self.printSerialClearBool.set(loadDict["printSerialClearBool"])
+            if "lineParseOffset" in keys:
+                self.lineParseOffset.set(loadDict["lineParseOffset"])
         
         self.CaseModelChanged(self.caseModel.get())
         if self.printType.get() == "Complete":
@@ -769,4 +793,5 @@ class AirpodsLabel(CustomLabel):
         saveDict["badRStr"] = self.badRStr.get()
         saveDict["icloudBool"] = self.icloudBool.get()
         saveDict["printSerialClearBool"] = self.printSerialClearBool.get()
+        saveDict["lineParseOffset"] = self.lineParseOffset.get()
         return saveDict
