@@ -1,12 +1,13 @@
 from GlobalImport import *
 from IndividualLabels import *
-from Printers import ZebraPrinter
+from Printers import PrinterManager
 
 class LabelManager:
     root : Tk
     frame : ttk.Frame
-    labelPrinter : ZebraPrinter
+    labelPrinter : PrinterManager
     queues = []
+    isZebra : BooleanVar
     currentPrinter : StringVar
     currentButton : StringVar
     previousButtonID : int = -1
@@ -23,7 +24,7 @@ class LabelManager:
 
     def __init__(self):
         self.root = Tk()
-        self.labelPrinter = ZebraPrinter()
+        self.labelPrinter = PrinterManager()
         self.root.title("Custom Print Manager")
         self.root.wm_protocol("WM_DELETE_WINDOW", self.CloseWindow)
         self.frame = Frame(self.root,padx=10, pady=10)
@@ -34,9 +35,13 @@ class LabelManager:
         self.labelPrinter.SetCurrentPrinter(self.currentPrinter.get())
         ttk.Label(self.frame, text="Selected Printer:").grid(column=0,row=1)
         ttk.OptionMenu(self.frame, self.currentPrinter, self.queues[0], *self.queues, command=self.labelPrinter.SetCurrentPrinter).grid(column=0,row=2)
-        ttk.Label(self.frame, text="Label Size:").grid(column=0,row=3)
+        self.isZebra = BooleanVar(value=True)
+        self.UpdateIsZebra()
+        checkbox = ttk.Checkbutton(self.frame, text="Is Zebra", variable=self.isZebra, command=self.UpdateIsZebra)
+        checkbox.grid(column=0,row=3)
+        ttk.Label(self.frame, text="Label Size:").grid(column=0,row=4)
         sizeFrame = Frame(self.frame)
-        sizeFrame.grid(column=0,row=4)
+        sizeFrame.grid(column=0,row=5)
         self.widthLabel = ttk.Label(sizeFrame, text="Width(mm)")
         self.widthLabel.grid(column=0,row=0)
         self.wEntry = StringVar(value=str(self.labelWidth))
@@ -45,16 +50,16 @@ class LabelManager:
         self.heightLabel.grid(column=0,row=1)
         self.hEntry = StringVar(value=str(self.labelHeight))
         ttk.Entry(sizeFrame, textvariable=self.hEntry).grid(column=1, row=1)
-        ttk.Button(self.frame, text="Update Label Size", command=self.UpdateLabelSize).grid(column=0, row=5)
+        ttk.Button(self.frame, text="Update Label Size", command=self.UpdateLabelSize).grid(column=0, row=6)
         unitFrame = Frame(self.frame)
-        unitFrame.grid(column=0, row=6)
+        unitFrame.grid(column=0, row=7)
         self.units = StringVar(value="mm")
         self.radioMM = ttk.Radiobutton(unitFrame, text = "mm", value="mm", variable=self.units, command=self.UnitsPressed)
         self.radioMM.grid(column=0,row=0)
         self.radioInch = ttk.Radiobutton(unitFrame, text = "in", value="in", variable=self.units, command=self.UnitsPressed)
         self.radioInch.grid(column=1,row=0)
         
-        currentRow = 7
+        currentRow = 8
         ttk.Label(self.frame, text="                  ").grid(column=0, row=currentRow) #Spacer
         ttk.Label(self.frame, text="Label Types:").grid(column=0, row=currentRow+1) #Spacer
         ttk.Label(self.frame, text="                  ").grid(column=0, row=currentRow+2) #Spacer
@@ -179,6 +184,9 @@ class LabelManager:
         except Exception as err:
             print(str(type(err)))
 
+    def UpdateIsZebra(self):
+        self.labelPrinter.SetIsZebra(self.isZebra.get())
+
     def UnitsPressed(self):
         self.UpdateLabelSize()
 
@@ -213,7 +221,7 @@ class LabelManager:
         self.root.destroy()
     
     def Save(self) -> dict:
-        return {"labelw" : self.labelWidth, "labelh" : self.labelHeight, "units" : self.units.get(), "printer" : self.currentPrinter.get()}
+        return {"labelw" : self.labelWidth, "labelh" : self.labelHeight, "units" : self.units.get(), "printer" : self.currentPrinter.get(), "isZebra" : self.isZebra.get()}
     
     def Load(self,loadDict : dict):
         keys = loadDict.keys()
@@ -234,4 +242,7 @@ class LabelManager:
         if "printer" in keys:
             self.currentPrinter.set(loadDict["printer"])
             self.labelPrinter.SetCurrentPrinter(self.currentPrinter.get())
+        if "isZebra" in keys:
+            self.isZebra.set(loadDict["isZebra"])
+        self.UpdateIsZebra()
         self.UpdateLabelSize()
